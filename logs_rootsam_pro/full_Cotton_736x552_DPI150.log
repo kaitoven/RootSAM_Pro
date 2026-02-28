@@ -1,0 +1,897 @@
+[2026-02-28 22:31:51] GPU1 | Cotton_736x552_DPI150 | FULL | abla_full_fair_s0_Cotton_736x552_DPI150
+
+======================================================================
+🚀 RootSAM-Pro Grand Unification Engine Booting...
+🏷️  Run ID       : 20260228_223153_62aae2e0_abla_full_fair_s0_Cotton_736x552_DPI150
+🧬 Version      : 2.0.0+62aae2e0 (OneShot-Modular-V2Final)
+🧾 Code Hash    : 62aae2e0
+🎯 Target Subset : Cotton_736x552_DPI150
+🎛️ Ablation Mode : FULL
+💻 Compute Node  : cuda
+======================================================================
+
+
+💥 Starting Truncated-BPTT Kinematic Training...
+
+--- Epoch 1/30 | LR: 1.000000e-04 ---
+Batch [0/117] | Tot: 3.6878 | Seg: 0.4516 | Topo: 1.0000 | Gate: 2.1666
+Batch [5/117] | Tot: 3.1519 | Seg: 0.3154 | Topo: 1.0000 | Gate: 1.9405
+Batch [10/117] | Tot: 2.8648 | Seg: 0.3335 | Topo: 1.0000 | Gate: 1.6410
+Batch [15/117] | Tot: 2.6476 | Seg: 0.1421 | Topo: 0.9879 | Gate: 1.7842
+Batch [20/117] | Tot: 2.4439 | Seg: 0.0591 | Topo: 1.0000 | Gate: 1.7828
+Batch [25/117] | Tot: 2.3182 | Seg: 0.0092 | Topo: 0.8802 | Gate: 1.8491
+Batch [30/117] | Tot: 2.4621 | Seg: 0.0041 | Topo: 0.7996 | Gate: 1.9747
+Batch [35/117] | Tot: 1.8798 | Seg: 0.0114 | Topo: 0.8381 | Gate: 1.4454
+Batch [40/117] | Tot: 1.8804 | Seg: 0.0055 | Topo: 0.8263 | Gate: 1.4978
+Batch [45/117] | Tot: 1.8037 | Seg: 0.0149 | Topo: 0.9609 | Gate: 1.3563
+Batch [50/117] | Tot: 1.8747 | Seg: 0.0058 | Topo: 0.9305 | Gate: 1.4373
+Batch [55/117] | Tot: 1.8637 | Seg: 0.0052 | Topo: 0.7166 | Gate: 1.5380
+Batch [60/117] | Tot: 1.5668 | Seg: 0.0031 | Topo: 0.9058 | Gate: 1.2125
+Batch [65/117] | Tot: 1.6091 | Seg: 0.0173 | Topo: 0.8482 | Gate: 1.2236
+Batch [70/117] | Tot: 1.6471 | Seg: 0.0015 | Topo: 0.9815 | Gate: 1.2797
+Batch [75/117] | Tot: 1.5500 | Seg: 0.0058 | Topo: 0.9281 | Gate: 1.2015
+Batch [80/117] | Tot: 1.6586 | Seg: 0.0134 | Topo: 0.9188 | Gate: 1.2801
+Batch [85/117] | Tot: 1.7101 | Seg: 0.0041 | Topo: 0.8896 | Gate: 1.3572
+Batch [90/117] | Tot: 1.4934 | Seg: 0.0311 | Topo: 0.9402 | Gate: 1.1426
+Batch [95/117] | Tot: 1.4524 | Seg: 0.0195 | Topo: 0.9331 | Gate: 1.1118
+Batch [100/117] | Tot: 1.4340 | Seg: 0.0103 | Topo: 0.9440 | Gate: 1.0630
+Batch [105/117] | Tot: 1.4734 | Seg: 0.0071 | Topo: 0.8965 | Gate: 1.1701
+Batch [110/117] | Tot: 1.4769 | Seg: 0.0388 | Topo: 0.9002 | Gate: 1.1169
+Batch [115/117] | Tot: 1.6749 | Seg: 0.0005 | Topo: 1.0000 | Gate: 1.3067
+[Train] Epoch/Step: 1 | Loss: 1.9236  LR: 0.0001  
+[Val] Epoch/Step: 1 | Accuracy: 99.0995  Precision: 44.5679  Recall: 14.4892  F1_Score: 21.8688  Standard_IoU: 12.2768  SDF_Relaxed_IoU: 32.3715  clDice: 32.8124  Pure_Soil_FPR: 0.0841  Insular_Gap_Recall: 22.3356  Gap_mIoU: 0.0000  
+🌟 [New Best-Score] Saved! Epoch=1 | Score=0.283694 (no gate) | F1=21.87% clDice=32.81% SDF=32.37% FPR=0.08% INS=22.34%
+🌟 [New Best-HPACS] Saved! Epoch=1 | Score=0.283694 | F1=21.87% clDice=32.81% SDF=32.37% FPR=0.08% INS=22.34%
+
+--- Epoch 2/30 | LR: 9.973979e-05 ---
+Batch [0/117] | Tot: 1.3896 | Seg: 0.0066 | Topo: 0.9983 | Gate: 1.0574
+Batch [5/117] | Tot: 1.5203 | Seg: 0.0010 | Topo: 0.9765 | Gate: 1.1922
+Batch [10/117] | Tot: 1.3147 | Seg: 0.0005 | Topo: 0.8312 | Gate: 1.0402
+Batch [15/117] | Tot: 1.3425 | Seg: 0.0036 | Topo: 0.8938 | Gate: 1.0437
+Batch [20/117] | Tot: 1.3365 | Seg: 0.0038 | Topo: 0.9969 | Gate: 1.0000
+Batch [25/117] | Tot: 1.4620 | Seg: 0.0044 | Topo: 0.8642 | Gate: 1.1649
+Batch [30/117] | Tot: 1.3844 | Seg: 0.0001 | Topo: 1.0000 | Gate: 1.0584
+Batch [35/117] | Tot: 1.4971 | Seg: 0.0048 | Topo: 0.9642 | Gate: 1.1816
+Batch [40/117] | Tot: 1.3430 | Seg: 0.0262 | Topo: 0.9257 | Gate: 1.0243
+Batch [45/117] | Tot: 1.2661 | Seg: 0.0051 | Topo: 0.8495 | Gate: 0.9792
+Batch [50/117] | Tot: 1.3515 | Seg: 0.0079 | Topo: 0.9785 | Gate: 1.0184
+Batch [55/117] | Tot: 1.2861 | Seg: 0.0446 | Topo: 0.7702 | Gate: 0.9842
+Batch [60/117] | Tot: 1.1656 | Seg: 0.0035 | Topo: 0.9317 | Gate: 0.8529
+Batch [65/117] | Tot: 1.2457 | Seg: 0.0017 | Topo: 0.8928 | Gate: 0.9538
+Batch [70/117] | Tot: 1.1955 | Seg: 0.0069 | Topo: 0.9395 | Gate: 0.8646
+Batch [75/117] | Tot: 1.1704 | Seg: 0.0282 | Topo: 0.9152 | Gate: 0.8450
+Batch [80/117] | Tot: 1.3910 | Seg: 0.0006 | Topo: 0.9049 | Gate: 1.0965
+Batch [85/117] | Tot: 1.2196 | Seg: 0.0047 | Topo: 0.7092 | Gate: 0.9807
+Batch [90/117] | Tot: 1.2513 | Seg: 0.0122 | Topo: 0.9602 | Gate: 0.9409
+Batch [95/117] | Tot: 1.1686 | Seg: 0.0054 | Topo: 0.8518 | Gate: 0.8910
+Batch [100/117] | Tot: 1.1385 | Seg: 0.0001 | Topo: 1.0000 | Gate: 0.8184
+Batch [105/117] | Tot: 1.3127 | Seg: 0.0008 | Topo: 0.8322 | Gate: 1.0502
+Batch [110/117] | Tot: 1.1731 | Seg: 0.0033 | Topo: 0.9308 | Gate: 0.8786
+Batch [115/117] | Tot: 1.2154 | Seg: 0.0147 | Topo: 0.9414 | Gate: 0.8548
+[Train] Epoch/Step: 2 | Loss: 1.3195  LR: 0.0001  
+[Val] Epoch/Step: 2 | Accuracy: 99.2215  Precision: 57.6150  Recall: 39.6872  F1_Score: 46.9995  Standard_IoU: 30.7185  SDF_Relaxed_IoU: 60.3740  clDice: 60.8442  Pure_Soil_FPR: 0.0468  Insular_Gap_Recall: 44.2698  Gap_mIoU: 0.0000  
+🌟 [New Best-Score] Saved! Epoch=2 | Score=0.610377 (no gate) | F1=47.00% clDice=60.84% SDF=60.37% FPR=0.05% INS=44.27%
+🌟 [New Best-HPACS] Saved! Epoch=2 | Score=0.610377 | F1=47.00% clDice=60.84% SDF=60.37% FPR=0.05% INS=44.27%
+
+--- Epoch 3/30 | LR: 9.896201e-05 ---
+Batch [0/117] | Tot: 1.1328 | Seg: 0.0062 | Topo: 0.7627 | Gate: 0.8793
+Batch [5/117] | Tot: 1.0520 | Seg: 0.0024 | Topo: 0.9091 | Gate: 0.7681
+Batch [10/117] | Tot: 0.9735 | Seg: 0.0004 | Topo: 0.9921 | Gate: 0.6655
+Batch [15/117] | Tot: 1.1510 | Seg: 0.0004 | Topo: 0.9817 | Gate: 0.8132
+Batch [20/117] | Tot: 1.0915 | Seg: 0.0024 | Topo: 0.8333 | Gate: 0.8245
+Batch [25/117] | Tot: 1.2906 | Seg: 0.0014 | Topo: 0.7662 | Gate: 1.0344
+Batch [30/117] | Tot: 1.1941 | Seg: 0.0047 | Topo: 0.7826 | Gate: 0.9346
+Batch [35/117] | Tot: 1.6655 | Seg: 0.0023 | Topo: 0.5769 | Gate: 1.4674
+Batch [40/117] | Tot: 1.3243 | Seg: 0.0065 | Topo: 0.8800 | Gate: 1.0519
+Batch [45/117] | Tot: 0.9248 | Seg: 0.0000 | Topo: 1.0000 | Gate: 0.6283
+Batch [50/117] | Tot: 1.1806 | Seg: 0.0008 | Topo: 0.9425 | Gate: 0.8864
+Batch [55/117] | Tot: 1.4694 | Seg: 0.0039 | Topo: 0.6975 | Gate: 1.2277
+Batch [60/117] | Tot: 1.1033 | Seg: 0.0146 | Topo: 0.9334 | Gate: 0.8099
+Batch [65/117] | Tot: 1.2252 | Seg: 0.0013 | Topo: 0.8416 | Gate: 0.9752
+Batch [70/117] | Tot: 1.2452 | Seg: 0.0009 | Topo: 0.7947 | Gate: 1.0013
+Batch [75/117] | Tot: 1.6215 | Seg: 0.0352 | Topo: 0.6379 | Gate: 1.3859
+Batch [80/117] | Tot: 1.1453 | Seg: 0.0040 | Topo: 0.8130 | Gate: 0.8901
+Batch [85/117] | Tot: 1.2599 | Seg: 0.0016 | Topo: 0.7982 | Gate: 1.0138
+Batch [90/117] | Tot: 0.8799 | Seg: 0.0000 | Topo: 1.0000 | Gate: 0.5789
+Batch [95/117] | Tot: 0.9531 | Seg: 0.0000 | Topo: 1.0000 | Gate: 0.6613
+Batch [100/117] | Tot: 1.1427 | Seg: 0.0219 | Topo: 0.8560 | Gate: 0.8620
+Batch [105/117] | Tot: 1.2757 | Seg: 0.0015 | Topo: 0.7153 | Gate: 1.0551
+Batch [110/117] | Tot: 0.8683 | Seg: 0.0000 | Topo: 1.0000 | Gate: 0.5801
+Batch [115/117] | Tot: 0.7547 | Seg: 0.0000 | Topo: 1.0000 | Gate: 0.4680
+[Train] Epoch/Step: 3 | Loss: 1.1887  LR: 0.0001  
+[Val] Epoch/Step: 3 | Accuracy: 99.2654  Precision: 58.8574  Recall: 51.6443  F1_Score: 55.0154  Standard_IoU: 37.9457  SDF_Relaxed_IoU: 74.6736  clDice: 75.2640  Pure_Soil_FPR: 0.0412  Insular_Gap_Recall: 55.5070  Gap_mIoU: 0.0000  
+🌟 [New Best-Score] Saved! Epoch=3 | Score=0.754329 (no gate) | F1=55.02% clDice=75.26% SDF=74.67% FPR=0.04% INS=55.51%
+🌟 [New Best-HPACS] Saved! Epoch=3 | Score=0.754329 | F1=55.02% clDice=75.26% SDF=74.67% FPR=0.04% INS=55.51%
+
+--- Epoch 4/30 | LR: 9.767518e-05 ---
+Batch [0/117] | Tot: 1.0243 | Seg: 0.0013 | Topo: 0.9271 | Gate: 0.7483
+Batch [5/117] | Tot: 0.6438 | Seg: 0.0000 | Topo: 1.0000 | Gate: 0.3602
+Batch [10/117] | Tot: 0.9910 | Seg: 0.0027 | Topo: 0.7530 | Gate: 0.7688
+Batch [15/117] | Tot: 0.7372 | Seg: 0.0000 | Topo: 1.0000 | Gate: 0.4558
+Batch [20/117] | Tot: 1.1350 | Seg: 0.0012 | Topo: 0.7623 | Gate: 0.9017
+Batch [25/117] | Tot: 1.0093 | Seg: 0.0077 | Topo: 0.8220 | Gate: 0.7653
+Batch [30/117] | Tot: 1.1173 | Seg: 0.0020 | Topo: 0.8839 | Gate: 0.8588
+Batch [35/117] | Tot: 1.0501 | Seg: 0.0018 | Topo: 0.9248 | Gate: 0.7442
+Batch [40/117] | Tot: 1.1848 | Seg: 0.0034 | Topo: 0.8255 | Gate: 0.9376
+Batch [45/117] | Tot: 0.8246 | Seg: 0.0018 | Topo: 0.7474 | Gate: 0.5936
+Batch [50/117] | Tot: 1.4325 | Seg: 0.0028 | Topo: 0.7556 | Gate: 1.2100
+Batch [55/117] | Tot: 1.0991 | Seg: 0.0024 | Topo: 0.8350 | Gate: 0.8523
+Batch [60/117] | Tot: 0.7516 | Seg: 0.0007 | Topo: 0.9999 | Gate: 0.4634
+Batch [65/117] | Tot: 0.7823 | Seg: 0.0004 | Topo: 0.9191 | Gate: 0.5165
+Batch [70/117] | Tot: 1.4628 | Seg: 0.0341 | Topo: 0.7486 | Gate: 1.2090
+Batch [75/117] | Tot: 1.7919 | Seg: 0.0053 | Topo: 0.6229 | Gate: 1.6028
+Batch [80/117] | Tot: 1.0684 | Seg: 0.0018 | Topo: 0.7999 | Gate: 0.8218
+Batch [85/117] | Tot: 1.0064 | Seg: 0.0019 | Topo: 0.9019 | Gate: 0.7407
+Batch [90/117] | Tot: 1.0915 | Seg: 0.0016 | Topo: 0.7680 | Gate: 0.8329
+Batch [95/117] | Tot: 1.0956 | Seg: 0.0016 | Topo: 0.8044 | Gate: 0.8354
+Batch [100/117] | Tot: 0.9470 | Seg: 0.0026 | Topo: 0.8230 | Gate: 0.6973
+Batch [105/117] | Tot: 1.2150 | Seg: 0.0075 | Topo: 0.7166 | Gate: 0.9979
+Batch [110/117] | Tot: 1.8808 | Seg: 0.0055 | Topo: 0.5080 | Gate: 1.7151
+Batch [115/117] | Tot: 0.4615 | Seg: 0.0000 | Topo: 1.0000 | Gate: 0.1749
+[Train] Epoch/Step: 4 | Loss: 1.0816  LR: 0.0001  
+[Val] Epoch/Step: 4 | Accuracy: 99.2653  Precision: 57.4931  Recall: 59.5587  F1_Score: 58.5077  Standard_IoU: 41.3504  SDF_Relaxed_IoU: 75.3146  clDice: 76.1416  Pure_Soil_FPR: 0.0645  Insular_Gap_Recall: 64.1132  Gap_mIoU: 0.0000  
+🌟 [New Best-Score] Saved! Epoch=4 | Score=0.786288 (no gate) | F1=58.51% clDice=76.14% SDF=75.31% FPR=0.06% INS=64.11%
+🌟 [New Best-HPACS] Saved! Epoch=4 | Score=0.786288 | F1=58.51% clDice=76.14% SDF=75.31% FPR=0.06% INS=64.11%
+
+--- Epoch 5/30 | LR: 9.589341e-05 ---
+Batch [0/117] | Tot: 0.5035 | Seg: 0.0000 | Topo: 1.0000 | Gate: 0.2220
+Batch [5/117] | Tot: 1.4137 | Seg: 0.0021 | Topo: 0.6331 | Gate: 1.2088
+Batch [10/117] | Tot: 1.1353 | Seg: 0.0076 | Topo: 0.7151 | Gate: 0.9045
+Batch [15/117] | Tot: 0.7991 | Seg: 0.0013 | Topo: 0.8964 | Gate: 0.5445
+Batch [20/117] | Tot: 0.7159 | Seg: 0.0003 | Topo: 0.8856 | Gate: 0.4669
+Batch [25/117] | Tot: 1.2792 | Seg: 0.0038 | Topo: 0.6667 | Gate: 1.0742
+Batch [30/117] | Tot: 1.0210 | Seg: 0.0037 | Topo: 0.7844 | Gate: 0.7938
+Batch [35/117] | Tot: 0.5311 | Seg: 0.0000 | Topo: 1.0000 | Gate: 0.2487
+Batch [40/117] | Tot: 0.4945 | Seg: 0.0010 | Topo: 0.9991 | Gate: 0.2064
+Batch [45/117] | Tot: 1.0813 | Seg: 0.0007 | Topo: 0.7500 | Gate: 0.8574
+Batch [50/117] | Tot: 0.5789 | Seg: 0.0001 | Topo: 0.9298 | Gate: 0.3172
+Batch [55/117] | Tot: 0.6237 | Seg: 0.0008 | Topo: 0.8337 | Gate: 0.3790
+Batch [60/117] | Tot: 0.9743 | Seg: 0.0029 | Topo: 0.8509 | Gate: 0.7298
+Batch [65/117] | Tot: 0.7081 | Seg: 0.0011 | Topo: 0.8800 | Gate: 0.4611
+Batch [70/117] | Tot: 1.2493 | Seg: 0.0242 | Topo: 0.7545 | Gate: 1.0112
+Batch [75/117] | Tot: 0.9709 | Seg: 0.0014 | Topo: 0.7533 | Gate: 0.7584
+Batch [80/117] | Tot: 0.5802 | Seg: 0.0006 | Topo: 0.9566 | Gate: 0.3097
+Batch [85/117] | Tot: 1.1726 | Seg: 0.0034 | Topo: 0.8114 | Gate: 0.9205
+Batch [90/117] | Tot: 0.7360 | Seg: 0.0003 | Topo: 0.9346 | Gate: 0.4759
+Batch [95/117] | Tot: 0.7166 | Seg: 0.0032 | Topo: 0.9110 | Gate: 0.4367
+Batch [100/117] | Tot: 0.3843 | Seg: 0.0000 | Topo: 1.0000 | Gate: 0.1111
+Batch [105/117] | Tot: 1.2106 | Seg: 0.0094 | Topo: 0.5713 | Gate: 1.0365
+Batch [110/117] | Tot: 0.3755 | Seg: 0.0000 | Topo: 1.0000 | Gate: 0.1016
+Batch [115/117] | Tot: 0.5068 | Seg: 0.0015 | Topo: 0.8967 | Gate: 0.2521
+[Train] Epoch/Step: 5 | Loss: 0.9001  LR: 0.0001  
+[Val] Epoch/Step: 5 | Accuracy: 99.3049  Precision: 60.7898  Recall: 56.5869  F1_Score: 58.6131  Standard_IoU: 41.4559  SDF_Relaxed_IoU: 78.6327  clDice: 79.6515  Pure_Soil_FPR: 0.0311  Insular_Gap_Recall: 58.4778  Gap_mIoU: 0.0000  
+🌟 [New Best-Score] Saved! Epoch=5 | Score=0.808071 (no gate) | F1=58.61% clDice=79.65% SDF=78.63% FPR=0.03% INS=58.48%
+🌟 [New Best-HPACS] Saved! Epoch=5 | Score=0.808071 | F1=58.61% clDice=79.65% SDF=78.63% FPR=0.03% INS=58.48%
+
+--- Epoch 6/30 | LR: 9.363621e-05 ---
+Batch [0/117] | Tot: 0.3393 | Seg: 0.0000 | Topo: 1.0000 | Gate: 0.0686
+Batch [5/117] | Tot: 1.1316 | Seg: 0.0021 | Topo: 0.6660 | Gate: 0.9311
+Batch [10/117] | Tot: 0.3614 | Seg: 0.0005 | Topo: 0.9889 | Gate: 0.0802
+Batch [15/117] | Tot: 0.8361 | Seg: 0.0090 | Topo: 0.7521 | Gate: 0.5839
+Batch [20/117] | Tot: 0.5960 | Seg: 0.0013 | Topo: 0.9423 | Gate: 0.3289
+Batch [25/117] | Tot: 0.9565 | Seg: 0.0017 | Topo: 0.8333 | Gate: 0.7219
+Batch [30/117] | Tot: 1.3286 | Seg: 0.0026 | Topo: 0.8615 | Gate: 1.0175
+Batch [35/117] | Tot: 1.0262 | Seg: 0.0015 | Topo: 0.7668 | Gate: 0.7375
+Batch [40/117] | Tot: 0.7076 | Seg: 0.0054 | Topo: 0.7812 | Gate: 0.4816
+Batch [45/117] | Tot: 0.9488 | Seg: 0.0286 | Topo: 0.7667 | Gate: 0.6978
+Batch [50/117] | Tot: 0.7816 | Seg: 0.0008 | Topo: 0.8827 | Gate: 0.5367
+Batch [55/117] | Tot: 0.5173 | Seg: 0.0009 | Topo: 0.9499 | Gate: 0.2493
+Batch [60/117] | Tot: 1.0274 | Seg: 0.0014 | Topo: 0.7639 | Gate: 0.8080
+Batch [65/117] | Tot: 0.6959 | Seg: 0.0044 | Topo: 0.8426 | Gate: 0.4608
+Batch [70/117] | Tot: 1.1696 | Seg: 0.0089 | Topo: 0.7240 | Gate: 0.9517
+Batch [75/117] | Tot: 0.5559 | Seg: 0.0017 | Topo: 0.8297 | Gate: 0.3243
+Batch [80/117] | Tot: 0.9618 | Seg: 0.0017 | Topo: 0.6988 | Gate: 0.7093
+Batch [85/117] | Tot: 0.6720 | Seg: 0.0015 | Topo: 0.9160 | Gate: 0.4080
+Batch [90/117] | Tot: 0.7624 | Seg: 0.0013 | Topo: 0.8445 | Gate: 0.5293
+Batch [95/117] | Tot: 0.8010 | Seg: 0.0011 | Topo: 0.8258 | Gate: 0.5741
+Batch [100/117] | Tot: 0.3301 | Seg: 0.0000 | Topo: 1.0000 | Gate: 0.0593
+Batch [105/117] | Tot: 0.4908 | Seg: 0.0001 | Topo: 0.8529 | Gate: 0.2504
+Batch [110/117] | Tot: 0.6172 | Seg: 0.0004 | Topo: 0.8257 | Gate: 0.3906
+Batch [115/117] | Tot: 0.6514 | Seg: 0.0008 | Topo: 0.9006 | Gate: 0.4034
+[Train] Epoch/Step: 6 | Loss: 0.8499  LR: 0.0001  
+[Val] Epoch/Step: 6 | Accuracy: 99.2848  Precision: 57.9032  Recall: 65.0924  F1_Score: 61.2877  Standard_IoU: 44.1833  SDF_Relaxed_IoU: 76.5472  clDice: 77.5137  Pure_Soil_FPR: 0.0629  Insular_Gap_Recall: 66.9464  Gap_mIoU: 0.0000  
+🌟 [New Best-Score] Saved! Epoch=6 | Score=0.815518 (no gate) | F1=61.29% clDice=77.51% SDF=76.55% FPR=0.06% INS=66.95%
+🌟 [New Best-HPACS] Saved! Epoch=6 | Score=0.815518 | F1=61.29% clDice=77.51% SDF=76.55% FPR=0.06% INS=66.95%
+
+--- Epoch 7/30 | LR: 9.092831e-05 ---
+Batch [0/117] | Tot: 0.6973 | Seg: 0.0012 | Topo: 0.8035 | Gate: 0.4762
+Batch [5/117] | Tot: 0.3257 | Seg: 0.0000 | Topo: 1.0000 | Gate: 0.0524
+Batch [10/117] | Tot: 1.2713 | Seg: 0.0099 | Topo: 0.7799 | Gate: 1.0260
+Batch [15/117] | Tot: 1.1760 | Seg: 0.0013 | Topo: 0.6857 | Gate: 0.9556
+Batch [20/117] | Tot: 1.5193 | Seg: 0.0045 | Topo: 0.5444 | Gate: 1.3539
+Batch [25/117] | Tot: 1.0812 | Seg: 0.0042 | Topo: 0.6211 | Gate: 0.8892
+Batch [30/117] | Tot: 1.6394 | Seg: 0.0102 | Topo: 0.5012 | Gate: 1.4470
+Batch [35/117] | Tot: 0.9636 | Seg: 0.0027 | Topo: 0.6868 | Gate: 0.7598
+Batch [40/117] | Tot: 0.4933 | Seg: 0.0012 | Topo: 0.9409 | Gate: 0.2369
+Batch [45/117] | Tot: 0.4829 | Seg: 0.0022 | Topo: 0.9602 | Gate: 0.1987
+Batch [50/117] | Tot: 0.9272 | Seg: 0.0030 | Topo: 0.8293 | Gate: 0.6920
+Batch [55/117] | Tot: 1.0328 | Seg: 0.0213 | Topo: 0.8543 | Gate: 0.7424
+Batch [60/117] | Tot: 0.6281 | Seg: 0.0063 | Topo: 0.8628 | Gate: 0.3863
+Batch [65/117] | Tot: 0.5226 | Seg: 0.0015 | Topo: 0.8211 | Gate: 0.2883
+Batch [70/117] | Tot: 1.0258 | Seg: 0.0023 | Topo: 0.7310 | Gate: 0.8172
+Batch [75/117] | Tot: 1.2345 | Seg: 0.0058 | Topo: 0.5441 | Gate: 1.0721
+Batch [80/117] | Tot: 0.9147 | Seg: 0.0017 | Topo: 0.6710 | Gate: 0.7252
+Batch [85/117] | Tot: 0.4256 | Seg: 0.0003 | Topo: 0.9325 | Gate: 0.1540
+Batch [90/117] | Tot: 0.3204 | Seg: 0.0000 | Topo: 1.0000 | Gate: 0.0532
+Batch [95/117] | Tot: 0.4312 | Seg: 0.0034 | Topo: 0.9118 | Gate: 0.1777
+Batch [100/117] | Tot: 0.5459 | Seg: 0.0015 | Topo: 0.6375 | Gate: 0.3611
+Batch [105/117] | Tot: 0.3115 | Seg: 0.0000 | Topo: 1.0000 | Gate: 0.0460
+Batch [110/117] | Tot: 0.5606 | Seg: 0.0002 | Topo: 0.7659 | Gate: 0.3541
+Batch [115/117] | Tot: 0.7314 | Seg: 0.0042 | Topo: 0.7396 | Gate: 0.5282
+[Train] Epoch/Step: 7 | Loss: 0.7951  LR: 0.0001  
+[Val] Epoch/Step: 7 | Accuracy: 99.2927  Precision: 58.3361  Recall: 65.3453  F1_Score: 61.6421  Standard_IoU: 44.5526  SDF_Relaxed_IoU: 80.1005  clDice: 81.0459  Pure_Soil_FPR: 0.0505  Insular_Gap_Recall: 66.4211  Gap_mIoU: 0.0000  
+🌟 [New Best-Score] Saved! Epoch=7 | Score=0.840471 (no gate) | F1=61.64% clDice=81.05% SDF=80.10% FPR=0.05% INS=66.42%
+🌟 [New Best-HPACS] Saved! Epoch=7 | Score=0.840471 | F1=61.64% clDice=81.05% SDF=80.10% FPR=0.05% INS=66.42%
+
+--- Epoch 8/30 | LR: 8.779938e-05 ---
+Batch [0/117] | Tot: 0.2523 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.0158
+Batch [5/117] | Tot: 0.6561 | Seg: 0.0004 | Topo: 0.9139 | Gate: 0.4004
+Batch [10/117] | Tot: 1.0070 | Seg: 0.0122 | Topo: 0.8157 | Gate: 0.7393
+Batch [15/117] | Tot: 1.0026 | Seg: 0.0020 | Topo: 0.7237 | Gate: 0.7815
+Batch [20/117] | Tot: 1.4816 | Seg: 0.0053 | Topo: 0.5708 | Gate: 1.3155
+Batch [25/117] | Tot: 1.3758 | Seg: 0.0061 | Topo: 0.5929 | Gate: 1.2027
+Batch [30/117] | Tot: 1.2447 | Seg: 0.0028 | Topo: 0.6046 | Gate: 1.0017
+Batch [35/117] | Tot: 1.5293 | Seg: 0.0110 | Topo: 0.4608 | Gate: 1.3819
+Batch [40/117] | Tot: 0.9689 | Seg: 0.0054 | Topo: 0.7899 | Gate: 0.7450
+Batch [45/117] | Tot: 0.7313 | Seg: 0.0154 | Topo: 0.8505 | Gate: 0.4873
+Batch [50/117] | Tot: 0.7876 | Seg: 0.0015 | Topo: 0.8482 | Gate: 0.5445
+Batch [55/117] | Tot: 0.8199 | Seg: 0.0022 | Topo: 0.7155 | Gate: 0.6216
+Batch [60/117] | Tot: 1.4747 | Seg: 0.0050 | Topo: 0.4886 | Gate: 1.3251
+Batch [65/117] | Tot: 0.7098 | Seg: 0.0094 | Topo: 0.8506 | Gate: 0.4599
+Batch [70/117] | Tot: 1.4464 | Seg: 0.0011 | Topo: 0.5479 | Gate: 1.2719
+Batch [75/117] | Tot: 0.8690 | Seg: 0.0030 | Topo: 0.7781 | Gate: 0.6408
+Batch [80/117] | Tot: 1.0283 | Seg: 0.0026 | Topo: 0.7624 | Gate: 0.7916
+Batch [85/117] | Tot: 0.6160 | Seg: 0.0319 | Topo: 0.8276 | Gate: 0.3620
+Batch [90/117] | Tot: 0.2774 | Seg: 0.0000 | Topo: 1.0000 | Gate: 0.0119
+Batch [95/117] | Tot: 0.2860 | Seg: 0.0000 | Topo: 1.0000 | Gate: 0.0225
+Batch [100/117] | Tot: 0.7008 | Seg: 0.0014 | Topo: 0.7776 | Gate: 0.4911
+Batch [105/117] | Tot: 0.5321 | Seg: 0.0005 | Topo: 0.8490 | Gate: 0.2986
+Batch [110/117] | Tot: 0.2859 | Seg: 0.0016 | Topo: 0.9752 | Gate: 0.0075
+Batch [115/117] | Tot: 0.2614 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.0056
+[Train] Epoch/Step: 8 | Loss: 0.7712  LR: 0.0001  
+[Val] Epoch/Step: 8 | Accuracy: 99.3003  Precision: 58.7453  Recall: 65.6577  F1_Score: 62.0094  Standard_IoU: 44.9374  SDF_Relaxed_IoU: 80.7800  clDice: 81.8164  Pure_Soil_FPR: 0.0421  Insular_Gap_Recall: 66.1994  Gap_mIoU: 0.0000  
+🌟 [New Best-Score] Saved! Epoch=8 | Score=0.847964 (no gate) | F1=62.01% clDice=81.82% SDF=80.78% FPR=0.04% INS=66.20%
+🌟 [New Best-HPACS] Saved! Epoch=8 | Score=0.847964 | F1=62.01% clDice=81.82% SDF=80.78% FPR=0.04% INS=66.20%
+
+--- Epoch 9/30 | LR: 8.428370e-05 ---
+Batch [0/117] | Tot: 0.2600 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.0053
+Batch [5/117] | Tot: 0.2792 | Seg: 0.0013 | Topo: 0.9318 | Gate: 0.0153
+Batch [10/117] | Tot: 0.2535 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.0132
+Batch [15/117] | Tot: 0.2483 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.0161
+Batch [20/117] | Tot: 0.6308 | Seg: 0.0004 | Topo: 0.8443 | Gate: 0.4057
+Batch [25/117] | Tot: 0.2437 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.0214
+Batch [30/117] | Tot: 0.6421 | Seg: 0.0034 | Topo: 0.8346 | Gate: 0.4153
+Batch [35/117] | Tot: 0.4691 | Seg: 0.0023 | Topo: 0.8562 | Gate: 0.2325
+Batch [40/117] | Tot: 0.9943 | Seg: 0.0044 | Topo: 0.6830 | Gate: 0.7813
+Batch [45/117] | Tot: 1.1739 | Seg: 0.0011 | Topo: 0.6228 | Gate: 0.9951
+Batch [50/117] | Tot: 0.7902 | Seg: 0.0205 | Topo: 0.8383 | Gate: 0.5406
+Batch [55/117] | Tot: 0.5819 | Seg: 0.0030 | Topo: 0.8467 | Gate: 0.3432
+Batch [60/117] | Tot: 1.3288 | Seg: 0.0033 | Topo: 0.6562 | Gate: 1.1284
+Batch [65/117] | Tot: 0.2539 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.0097
+Batch [70/117] | Tot: 1.1758 | Seg: 0.0025 | Topo: 0.7456 | Gate: 0.9612
+Batch [75/117] | Tot: 0.9494 | Seg: 0.0033 | Topo: 0.6888 | Gate: 0.7561
+Batch [80/117] | Tot: 0.5040 | Seg: 0.0020 | Topo: 0.9014 | Gate: 0.2490
+Batch [85/117] | Tot: 0.9461 | Seg: 0.0233 | Topo: 0.6902 | Gate: 0.7282
+Batch [90/117] | Tot: 0.7871 | Seg: 0.0007 | Topo: 0.6789 | Gate: 0.5782
+Batch [95/117] | Tot: 0.7647 | Seg: 0.0033 | Topo: 0.8251 | Gate: 0.5304
+Batch [100/117] | Tot: 1.1081 | Seg: 0.0034 | Topo: 0.6840 | Gate: 0.9141
+Batch [105/117] | Tot: 1.3685 | Seg: 0.0194 | Topo: 0.4968 | Gate: 1.2037
+Batch [110/117] | Tot: 0.3632 | Seg: 0.0018 | Topo: 0.9620 | Gate: 0.1073
+Batch [115/117] | Tot: 0.2085 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.0519
+[Train] Epoch/Step: 9 | Loss: 0.7405  LR: 0.0001  
+[Val] Epoch/Step: 9 | Accuracy: 99.2554  Precision: 55.8242  Recall: 68.9914  F1_Score: 61.7133  Standard_IoU: 44.6270  SDF_Relaxed_IoU: 79.0621  clDice: 80.0563  Pure_Soil_FPR: 0.0877  Insular_Gap_Recall: 69.4257  Gap_mIoU: 0.0000  
+
+--- Epoch 10/30 | LR: 8.041980e-05 ---
+Batch [0/117] | Tot: 0.2132 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.0500
+Batch [5/117] | Tot: 0.8990 | Seg: 0.0081 | Topo: 0.7224 | Gate: 0.6944
+Batch [10/117] | Tot: 0.4444 | Seg: 0.0001 | Topo: 0.7700 | Gate: 0.2408
+Batch [15/117] | Tot: 0.2425 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.0196
+Batch [20/117] | Tot: 0.2819 | Seg: 0.0000 | Topo: 1.0000 | Gate: 0.0100
+Batch [25/117] | Tot: 0.6337 | Seg: 0.0001 | Topo: 0.8103 | Gate: 0.4177
+Batch [30/117] | Tot: 0.2320 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.0332
+Batch [35/117] | Tot: 0.6508 | Seg: 0.0012 | Topo: 0.7831 | Gate: 0.4107
+Batch [40/117] | Tot: 0.6413 | Seg: 0.0012 | Topo: 0.8035 | Gate: 0.4262
+Batch [45/117] | Tot: 0.8825 | Seg: 0.0012 | Topo: 0.8292 | Gate: 0.6364
+Batch [50/117] | Tot: 0.3725 | Seg: 0.0022 | Topo: 0.9487 | Gate: 0.1044
+Batch [55/117] | Tot: 1.0409 | Seg: 0.0029 | Topo: 0.6573 | Gate: 0.8331
+Batch [60/117] | Tot: 0.9495 | Seg: 0.0052 | Topo: 0.8045 | Gate: 0.7155
+Batch [65/117] | Tot: 1.4217 | Seg: 0.0056 | Topo: 0.4470 | Gate: 1.2858
+Batch [70/117] | Tot: 1.2656 | Seg: 0.0178 | Topo: 0.6469 | Gate: 1.0648
+Batch [75/117] | Tot: 0.7091 | Seg: 0.0010 | Topo: 0.8391 | Gate: 0.4414
+Batch [80/117] | Tot: 0.7299 | Seg: 0.0018 | Topo: 0.7627 | Gate: 0.5212
+Batch [85/117] | Tot: 1.0198 | Seg: 0.0010 | Topo: 0.6344 | Gate: 0.8266
+Batch [90/117] | Tot: 1.2365 | Seg: 0.0240 | Topo: 0.5049 | Gate: 1.0207
+Batch [95/117] | Tot: 0.6105 | Seg: 0.0288 | Topo: 0.8232 | Gate: 0.3623
+Batch [100/117] | Tot: 0.5135 | Seg: 0.0038 | Topo: 0.8684 | Gate: 0.2800
+Batch [105/117] | Tot: 0.6547 | Seg: 0.0084 | Topo: 0.7972 | Gate: 0.4221
+Batch [110/117] | Tot: 0.9133 | Seg: 0.0037 | Topo: 0.6745 | Gate: 0.7193
+Batch [115/117] | Tot: 1.3979 | Seg: 0.0085 | Topo: 0.5116 | Gate: 1.1702
+[Train] Epoch/Step: 10 | Loss: 0.7127  LR: 0.0001  
+[Val] Epoch/Step: 10 | Accuracy: 99.2883  Precision: 57.7314  Recall: 67.8442  F1_Score: 62.3806  Standard_IoU: 45.3284  SDF_Relaxed_IoU: 81.3729  clDice: 82.4659  Pure_Soil_FPR: 0.0564  Insular_Gap_Recall: 67.8305  Gap_mIoU: 0.0000  
+🌟 [New Best-Score] Saved! Epoch=10 | Score=0.854805 (no gate) | F1=62.38% clDice=82.47% SDF=81.37% FPR=0.06% INS=67.83%
+🌟 [New Best-HPACS] Saved! Epoch=10 | Score=0.854805 | F1=62.38% clDice=82.47% SDF=81.37% FPR=0.06% INS=67.83%
+
+--- Epoch 11/30 | LR: 7.625000e-05 ---
+Batch [0/117] | Tot: 1.0379 | Seg: 0.0165 | Topo: 0.6319 | Gate: 0.8323
+Batch [5/117] | Tot: 0.6942 | Seg: 0.0017 | Topo: 0.8019 | Gate: 0.4785
+Batch [10/117] | Tot: 0.5462 | Seg: 0.0005 | Topo: 0.8408 | Gate: 0.2906
+Batch [15/117] | Tot: 1.1928 | Seg: 0.0150 | Topo: 0.5061 | Gate: 1.0341
+Batch [20/117] | Tot: 0.5572 | Seg: 0.0005 | Topo: 0.9038 | Gate: 0.2814
+Batch [25/117] | Tot: 0.4982 | Seg: 0.0011 | Topo: 0.8308 | Gate: 0.2777
+Batch [30/117] | Tot: 0.9513 | Seg: 0.0027 | Topo: 0.5846 | Gate: 0.7855
+Batch [35/117] | Tot: 0.5187 | Seg: 0.0004 | Topo: 0.8854 | Gate: 0.2792
+Batch [40/117] | Tot: 0.8922 | Seg: 0.0033 | Topo: 0.7087 | Gate: 0.6944
+Batch [45/117] | Tot: 1.2939 | Seg: 0.0026 | Topo: 0.5446 | Gate: 1.1412
+Batch [50/117] | Tot: 0.4880 | Seg: 0.0001 | Topo: 0.9473 | Gate: 0.2297
+Batch [55/117] | Tot: 0.7195 | Seg: 0.0013 | Topo: 0.7078 | Gate: 0.5249
+Batch [60/117] | Tot: 0.5263 | Seg: 0.0010 | Topo: 0.9396 | Gate: 0.2726
+Batch [65/117] | Tot: 0.2646 | Seg: 0.0000 | Topo: 0.9552 | Gate: 0.0118
+Batch [70/117] | Tot: 0.7636 | Seg: 0.0194 | Topo: 0.8122 | Gate: 0.5271
+Batch [75/117] | Tot: 1.2910 | Seg: 0.0074 | Topo: 0.4707 | Gate: 1.1508
+Batch [80/117] | Tot: 1.2800 | Seg: 0.0051 | Topo: 0.6208 | Gate: 1.1005
+Batch [85/117] | Tot: 0.1875 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.0742
+Batch [90/117] | Tot: 0.2277 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.0341
+Batch [95/117] | Tot: 0.4040 | Seg: 0.0013 | Topo: 0.7792 | Gate: 0.1956
+Batch [100/117] | Tot: 0.3946 | Seg: 0.0004 | Topo: 0.8212 | Gate: 0.1766
+Batch [105/117] | Tot: 1.1580 | Seg: 0.0089 | Topo: 0.5576 | Gate: 0.9895
+Batch [110/117] | Tot: 0.2125 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.0481
+Batch [115/117] | Tot: 0.5115 | Seg: 0.0009 | Topo: 0.7545 | Gate: 0.3109
+[Train] Epoch/Step: 11 | Loss: 0.6660  LR: 0.0001  
+[Val] Epoch/Step: 11 | Accuracy: 99.2931  Precision: 58.1970  Recall: 66.4836  F1_Score: 62.0649  Standard_IoU: 44.9958  SDF_Relaxed_IoU: 81.1629  clDice: 82.2411  Pure_Soil_FPR: 0.0523  Insular_Gap_Recall: 65.0920  Gap_mIoU: 0.0000  
+
+--- Epoch 12/30 | LR: 7.181999e-05 ---
+Batch [0/117] | Tot: 0.6459 | Seg: 0.0074 | Topo: 0.7445 | Gate: 0.4390
+Batch [5/117] | Tot: 0.4854 | Seg: 0.0001 | Topo: 0.8457 | Gate: 0.2609
+Batch [10/117] | Tot: 1.5087 | Seg: 0.0067 | Topo: 0.5136 | Gate: 1.3114
+Batch [15/117] | Tot: 0.5316 | Seg: 0.0005 | Topo: 0.8929 | Gate: 0.2782
+Batch [20/117] | Tot: 0.7049 | Seg: 0.0009 | Topo: 0.6451 | Gate: 0.5265
+Batch [25/117] | Tot: 0.7568 | Seg: 0.0168 | Topo: 0.8278 | Gate: 0.5164
+Batch [30/117] | Tot: 0.5359 | Seg: 0.0002 | Topo: 0.8417 | Gate: 0.2958
+Batch [35/117] | Tot: 0.4000 | Seg: 0.0010 | Topo: 0.7430 | Gate: 0.1763
+Batch [40/117] | Tot: 1.0433 | Seg: 0.0049 | Topo: 0.7179 | Gate: 0.8379
+Batch [45/117] | Tot: 0.6419 | Seg: 0.0109 | Topo: 0.8339 | Gate: 0.4002
+Batch [50/117] | Tot: 0.8122 | Seg: 0.0111 | Topo: 0.6486 | Gate: 0.6232
+Batch [55/117] | Tot: 0.7369 | Seg: 0.0029 | Topo: 0.8187 | Gate: 0.5090
+Batch [60/117] | Tot: 0.8048 | Seg: 0.0040 | Topo: 0.6680 | Gate: 0.6208
+Batch [65/117] | Tot: 1.1525 | Seg: 0.0057 | Topo: 0.5923 | Gate: 0.9824
+Batch [70/117] | Tot: 0.5017 | Seg: 0.0004 | Topo: 0.8798 | Gate: 0.2684
+Batch [75/117] | Tot: 0.7436 | Seg: 0.0083 | Topo: 0.6375 | Gate: 0.5525
+Batch [80/117] | Tot: 0.7916 | Seg: 0.0058 | Topo: 0.7518 | Gate: 0.5726
+Batch [85/117] | Tot: 0.8094 | Seg: 0.0004 | Topo: 0.7295 | Gate: 0.6157
+Batch [90/117] | Tot: 0.2158 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.0444
+Batch [95/117] | Tot: 0.4433 | Seg: 0.0004 | Topo: 0.8142 | Gate: 0.2274
+Batch [100/117] | Tot: 0.4640 | Seg: 0.0040 | Topo: 0.8645 | Gate: 0.2342
+Batch [105/117] | Tot: 0.4604 | Seg: 0.0033 | Topo: 0.8284 | Gate: 0.2364
+Batch [110/117] | Tot: 0.5507 | Seg: 0.0005 | Topo: 0.8518 | Gate: 0.3256
+Batch [115/117] | Tot: 0.1499 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.1106
+[Train] Epoch/Step: 12 | Loss: 0.6443  LR: 0.0001  
+[Val] Epoch/Step: 12 | Accuracy: 99.2786  Precision: 57.1867  Recall: 67.8655  F1_Score: 62.0701  Standard_IoU: 45.0012  SDF_Relaxed_IoU: 80.9114  clDice: 81.8890  Pure_Soil_FPR: 0.0581  Insular_Gap_Recall: 66.1365  Gap_mIoU: 0.0000  
+
+--- Epoch 13/30 | LR: 6.717831e-05 ---
+Batch [0/117] | Tot: 0.1961 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.0627
+Batch [5/117] | Tot: 0.4578 | Seg: 0.0001 | Topo: 0.8145 | Gate: 0.2410
+Batch [10/117] | Tot: 0.4121 | Seg: 0.0006 | Topo: 0.8597 | Gate: 0.1865
+Batch [15/117] | Tot: 0.7134 | Seg: 0.0003 | Topo: 0.5598 | Gate: 0.5630
+Batch [20/117] | Tot: 0.2917 | Seg: 0.0008 | Topo: 0.9247 | Gate: 0.0469
+Batch [25/117] | Tot: 0.7656 | Seg: 0.0121 | Topo: 0.6108 | Gate: 0.5890
+Batch [30/117] | Tot: 0.1340 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.1246
+Batch [35/117] | Tot: 0.4621 | Seg: 0.0017 | Topo: 0.8371 | Gate: 0.2407
+Batch [40/117] | Tot: 1.0922 | Seg: 0.0053 | Topo: 0.6589 | Gate: 0.8901
+Batch [45/117] | Tot: 0.4960 | Seg: 0.0009 | Topo: 0.8197 | Gate: 0.2771
+Batch [50/117] | Tot: 0.5767 | Seg: 0.0022 | Topo: 0.6527 | Gate: 0.3972
+Batch [55/117] | Tot: 0.3961 | Seg: 0.0012 | Topo: 0.8637 | Gate: 0.1426
+Batch [60/117] | Tot: 0.7655 | Seg: 0.0032 | Topo: 0.7339 | Gate: 0.5612
+Batch [65/117] | Tot: 1.3430 | Seg: 0.0014 | Topo: 0.5104 | Gate: 1.2011
+Batch [70/117] | Tot: 0.5985 | Seg: 0.0008 | Topo: 0.7326 | Gate: 0.3994
+Batch [75/117] | Tot: 0.5263 | Seg: 0.0223 | Topo: 0.9172 | Gate: 0.2547
+Batch [80/117] | Tot: 0.1917 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.0675
+Batch [85/117] | Tot: 0.4762 | Seg: 0.0012 | Topo: 0.7650 | Gate: 0.2746
+Batch [90/117] | Tot: 1.0149 | Seg: 0.0005 | Topo: 0.6994 | Gate: 0.7802
+Batch [95/117] | Tot: 0.4325 | Seg: 0.0012 | Topo: 0.9772 | Gate: 0.1529
+Batch [100/117] | Tot: 0.4427 | Seg: 0.0006 | Topo: 0.8288 | Gate: 0.2224
+Batch [105/117] | Tot: 0.3470 | Seg: 0.0018 | Topo: 0.9352 | Gate: 0.0893
+Batch [110/117] | Tot: 0.5642 | Seg: 0.0023 | Topo: 0.7678 | Gate: 0.3420
+Batch [115/117] | Tot: 0.9493 | Seg: 0.0008 | Topo: 0.7772 | Gate: 0.6575
+[Train] Epoch/Step: 13 | Loss: 0.6342  LR: 0.0001  
+[Val] Epoch/Step: 13 | Accuracy: 99.2941  Precision: 58.1647  Recall: 67.1032  F1_Score: 62.3151  Standard_IoU: 45.2592  SDF_Relaxed_IoU: 81.5580  clDice: 82.6001  Pure_Soil_FPR: 0.0561  Insular_Gap_Recall: 65.8262  Gap_mIoU: 0.0000  
+🌟 [New Best-Score] Saved! Epoch=13 | Score=0.855220 (no gate) | F1=62.32% clDice=82.60% SDF=81.56% FPR=0.06% INS=65.83%
+🌟 [New Best-HPACS] Saved! Epoch=13 | Score=0.855220 | F1=62.32% clDice=82.60% SDF=81.56% FPR=0.06% INS=65.83%
+
+--- Epoch 14/30 | LR: 6.237581e-05 ---
+Batch [0/117] | Tot: 0.3948 | Seg: 0.0008 | Topo: 0.8748 | Gate: 0.1650
+Batch [5/117] | Tot: 0.4522 | Seg: 0.0004 | Topo: 0.8497 | Gate: 0.2283
+Batch [10/117] | Tot: 0.4034 | Seg: 0.0013 | Topo: 0.7783 | Gate: 0.1979
+Batch [15/117] | Tot: 0.1735 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.0869
+Batch [20/117] | Tot: 0.1699 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.0903
+Batch [25/117] | Tot: 0.4078 | Seg: 0.0011 | Topo: 0.8422 | Gate: 0.1881
+Batch [30/117] | Tot: 0.1101 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.1497
+Batch [35/117] | Tot: 0.6573 | Seg: 0.0087 | Topo: 0.6862 | Gate: 0.4634
+Batch [40/117] | Tot: 0.8315 | Seg: 0.0061 | Topo: 0.7166 | Gate: 0.6292
+Batch [45/117] | Tot: 0.3678 | Seg: 0.0008 | Topo: 0.8902 | Gate: 0.1342
+Batch [50/117] | Tot: 0.8246 | Seg: 0.0043 | Topo: 0.6320 | Gate: 0.6356
+Batch [55/117] | Tot: 0.8749 | Seg: 0.0017 | Topo: 0.5168 | Gate: 0.7327
+Batch [60/117] | Tot: 0.5544 | Seg: 0.0024 | Topo: 0.7026 | Gate: 0.3658
+Batch [65/117] | Tot: 0.6917 | Seg: 0.0069 | Topo: 0.7596 | Gate: 0.4770
+Batch [70/117] | Tot: 1.3226 | Seg: 0.0050 | Topo: 0.3667 | Gate: 1.2097
+Batch [75/117] | Tot: 1.0767 | Seg: 0.0008 | Topo: 0.5941 | Gate: 0.9165
+Batch [80/117] | Tot: 0.6919 | Seg: 0.0093 | Topo: 0.7020 | Gate: 0.4926
+Batch [85/117] | Tot: 1.1615 | Seg: 0.0038 | Topo: 0.4748 | Gate: 1.0084
+Batch [90/117] | Tot: 0.5116 | Seg: 0.0008 | Topo: 0.7958 | Gate: 0.3004
+Batch [95/117] | Tot: 1.5468 | Seg: 0.0038 | Topo: 0.4085 | Gate: 1.4248
+Batch [100/117] | Tot: 0.4846 | Seg: 0.0005 | Topo: 0.7493 | Gate: 0.2856
+Batch [105/117] | Tot: 0.7187 | Seg: 0.0080 | Topo: 0.6557 | Gate: 0.5216
+Batch [110/117] | Tot: 0.5052 | Seg: 0.0010 | Topo: 0.7599 | Gate: 0.2891
+Batch [115/117] | Tot: 0.4858 | Seg: 0.0016 | Topo: 0.7766 | Gate: 0.2790
+[Train] Epoch/Step: 14 | Loss: 0.5974  LR: 0.0001  
+[Val] Epoch/Step: 14 | Accuracy: 99.2681  Precision: 56.5322  Recall: 68.6148  F1_Score: 61.9903  Standard_IoU: 44.9173  SDF_Relaxed_IoU: 80.6353  clDice: 81.7230  Pure_Soil_FPR: 0.0659  Insular_Gap_Recall: 67.0094  Gap_mIoU: 0.0000  
+
+--- Epoch 15/30 | LR: 5.746510e-05 ---
+Batch [0/117] | Tot: 0.8381 | Seg: 0.0020 | Topo: 0.5673 | Gate: 0.6770
+Batch [5/117] | Tot: 0.6495 | Seg: 0.0166 | Topo: 0.7949 | Gate: 0.4184
+Batch [10/117] | Tot: 0.4390 | Seg: 0.0058 | Topo: 0.8509 | Gate: 0.2076
+Batch [15/117] | Tot: 0.8329 | Seg: 0.0029 | Topo: 0.6953 | Gate: 0.6442
+Batch [20/117] | Tot: 0.8665 | Seg: 0.0013 | Topo: 0.5908 | Gate: 0.6919
+Batch [25/117] | Tot: 0.6731 | Seg: 0.0017 | Topo: 0.7709 | Gate: 0.4554
+Batch [30/117] | Tot: 0.5894 | Seg: 0.0009 | Topo: 0.7712 | Gate: 0.3845
+Batch [35/117] | Tot: 0.5304 | Seg: 0.0019 | Topo: 0.7960 | Gate: 0.2978
+Batch [40/117] | Tot: 0.5699 | Seg: 0.0010 | Topo: 0.7849 | Gate: 0.3586
+Batch [45/117] | Tot: 0.7556 | Seg: 0.0019 | Topo: 0.7384 | Gate: 0.5569
+Batch [50/117] | Tot: 0.8221 | Seg: 0.0012 | Topo: 0.6416 | Gate: 0.6466
+Batch [55/117] | Tot: 0.6795 | Seg: 0.0008 | Topo: 0.7037 | Gate: 0.4646
+Batch [60/117] | Tot: 0.7711 | Seg: 0.0025 | Topo: 0.7540 | Gate: 0.5709
+Batch [65/117] | Tot: 0.6393 | Seg: 0.0010 | Topo: 0.6767 | Gate: 0.4431
+Batch [70/117] | Tot: 0.5866 | Seg: 0.0013 | Topo: 0.7300 | Gate: 0.3914
+Batch [75/117] | Tot: 0.8548 | Seg: 0.0035 | Topo: 0.4638 | Gate: 0.7231
+Batch [80/117] | Tot: 0.5415 | Seg: 0.0020 | Topo: 0.8341 | Gate: 0.3199
+Batch [85/117] | Tot: 0.1132 | Seg: 0.0004 | Topo: 0.7802 | Gate: -0.0897
+Batch [90/117] | Tot: 0.3873 | Seg: 0.0007 | Topo: 0.8454 | Gate: 0.1660
+Batch [95/117] | Tot: 0.6802 | Seg: 0.0011 | Topo: 0.6496 | Gate: 0.5062
+Batch [100/117] | Tot: 0.4307 | Seg: 0.0037 | Topo: 0.7398 | Gate: 0.2286
+Batch [105/117] | Tot: 0.1578 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.1052
+Batch [110/117] | Tot: 0.1554 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.1016
+Batch [115/117] | Tot: 0.1529 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.1083
+[Train] Epoch/Step: 15 | Loss: 0.5649  LR: 0.0001  
+[Val] Epoch/Step: 15 | Accuracy: 99.2735  Precision: 56.8476  Recall: 68.3689  F1_Score: 62.0782  Standard_IoU: 45.0097  SDF_Relaxed_IoU: 81.1399  clDice: 82.1880  Pure_Soil_FPR: 0.0559  Insular_Gap_Recall: 66.5724  Gap_mIoU: 0.0000  
+
+--- Epoch 16/30 | LR: 5.250000e-05 ---
+Batch [0/117] | Tot: 0.4919 | Seg: 0.0007 | Topo: 0.8192 | Gate: 0.2770
+Batch [5/117] | Tot: 0.3332 | Seg: 0.0084 | Topo: 0.8548 | Gate: 0.0971
+Batch [10/117] | Tot: 1.3212 | Seg: 0.0055 | Topo: 0.2315 | Gate: 1.2432
+Batch [15/117] | Tot: 0.3880 | Seg: 0.0011 | Topo: 0.8762 | Gate: 0.1515
+Batch [20/117] | Tot: 1.1232 | Seg: 0.0021 | Topo: 0.5577 | Gate: 0.9699
+Batch [25/117] | Tot: 0.6649 | Seg: 0.0032 | Topo: 0.7413 | Gate: 0.4083
+Batch [30/117] | Tot: 1.0756 | Seg: 0.0089 | Topo: 0.6277 | Gate: 0.8973
+Batch [35/117] | Tot: 0.4046 | Seg: 0.0004 | Topo: 0.7783 | Gate: 0.1979
+Batch [40/117] | Tot: 0.2417 | Seg: 0.0004 | Topo: 0.9388 | Gate: -0.0052
+Batch [45/117] | Tot: 0.6466 | Seg: 0.0017 | Topo: 0.7278 | Gate: 0.4400
+Batch [50/117] | Tot: 1.0074 | Seg: 0.0046 | Topo: 0.6646 | Gate: 0.8246
+Batch [55/117] | Tot: 0.7231 | Seg: 0.0027 | Topo: 0.6929 | Gate: 0.5372
+Batch [60/117] | Tot: 0.6570 | Seg: 0.0146 | Topo: 0.6992 | Gate: 0.4564
+Batch [65/117] | Tot: 0.1710 | Seg: 0.0000 | Topo: 0.9402 | Gate: -0.0746
+Batch [70/117] | Tot: 0.8518 | Seg: 0.0008 | Topo: 0.5266 | Gate: 0.6933
+Batch [75/117] | Tot: 0.8330 | Seg: 0.0121 | Topo: 0.4711 | Gate: 0.6863
+Batch [80/117] | Tot: 0.6572 | Seg: 0.0004 | Topo: 0.7416 | Gate: 0.4593
+Batch [85/117] | Tot: 0.2743 | Seg: 0.0004 | Topo: 0.7808 | Gate: 0.0709
+Batch [90/117] | Tot: 0.5267 | Seg: 0.0045 | Topo: 0.7394 | Gate: 0.3279
+Batch [95/117] | Tot: 0.1395 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.1221
+Batch [100/117] | Tot: 0.1397 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.1213
+Batch [105/117] | Tot: 0.3100 | Seg: 0.0008 | Topo: 0.7990 | Gate: 0.1005
+Batch [110/117] | Tot: 0.7098 | Seg: 0.0019 | Topo: 0.4049 | Gate: 0.5972
+Batch [115/117] | Tot: 0.1322 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.1278
+[Train] Epoch/Step: 16 | Loss: 0.5381  LR: 0.0001  
+[Val] Epoch/Step: 16 | Accuracy: 99.2688  Precision: 56.5310  Recall: 68.9562  F1_Score: 62.1285  Standard_IoU: 45.0626  SDF_Relaxed_IoU: 81.1272  clDice: 82.3399  Pure_Soil_FPR: 0.0622  Insular_Gap_Recall: 68.0769  Gap_mIoU: 0.0000  
+
+--- Epoch 17/30 | LR: 4.753490e-05 ---
+Batch [0/117] | Tot: 0.3646 | Seg: 0.0009 | Topo: 0.7532 | Gate: 0.1643
+Batch [5/117] | Tot: 0.5802 | Seg: 0.0005 | Topo: 0.6316 | Gate: 0.4128
+Batch [10/117] | Tot: 0.4465 | Seg: 0.0030 | Topo: 0.6803 | Gate: 0.2642
+Batch [15/117] | Tot: 0.1204 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.1403
+Batch [20/117] | Tot: 0.1201 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.1401
+Batch [25/117] | Tot: 0.4604 | Seg: 0.0036 | Topo: 0.8089 | Gate: 0.2448
+Batch [30/117] | Tot: 0.0571 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.1999
+Batch [35/117] | Tot: 1.2051 | Seg: 0.0053 | Topo: 0.3908 | Gate: 1.0891
+Batch [40/117] | Tot: 0.7996 | Seg: 0.0198 | Topo: 0.7247 | Gate: 0.5732
+Batch [45/117] | Tot: 0.7162 | Seg: 0.0009 | Topo: 0.5877 | Gate: 0.5598
+Batch [50/117] | Tot: 0.9820 | Seg: 0.0077 | Topo: 0.6152 | Gate: 0.8092
+Batch [55/117] | Tot: 0.4488 | Seg: 0.0012 | Topo: 0.8761 | Gate: 0.2135
+Batch [60/117] | Tot: 0.6134 | Seg: 0.0019 | Topo: 0.6614 | Gate: 0.4348
+Batch [65/117] | Tot: 0.3540 | Seg: 0.0007 | Topo: 0.8760 | Gate: 0.1252
+Batch [70/117] | Tot: 0.3817 | Seg: 0.0057 | Topo: 0.8389 | Gate: 0.1546
+Batch [75/117] | Tot: 0.5103 | Seg: 0.0009 | Topo: 0.7942 | Gate: 0.2930
+Batch [80/117] | Tot: 1.0520 | Seg: 0.0021 | Topo: 0.4727 | Gate: 0.8936
+Batch [85/117] | Tot: 0.7313 | Seg: 0.0018 | Topo: 0.7828 | Gate: 0.5109
+Batch [90/117] | Tot: 0.8261 | Seg: 0.0018 | Topo: 0.7793 | Gate: 0.5824
+Batch [95/117] | Tot: 0.3261 | Seg: 0.0020 | Topo: 0.8510 | Gate: 0.1005
+Batch [100/117] | Tot: 1.0940 | Seg: 0.0061 | Topo: 0.5048 | Gate: 0.9506
+Batch [105/117] | Tot: 0.7094 | Seg: 0.0020 | Topo: 0.6292 | Gate: 0.5397
+Batch [110/117] | Tot: 0.7584 | Seg: 0.0018 | Topo: 0.7069 | Gate: 0.5573
+Batch [115/117] | Tot: 0.8487 | Seg: 0.0178 | Topo: 0.7164 | Gate: 0.6048
+[Train] Epoch/Step: 17 | Loss: 0.5247  LR: 0.0000  
+[Val] Epoch/Step: 17 | Accuracy: 99.2310  Precision: 54.5169  Recall: 69.8888  F1_Score: 61.2531  Standard_IoU: 44.1474  SDF_Relaxed_IoU: 78.8950  clDice: 80.1057  Pure_Soil_FPR: 0.0868  Insular_Gap_Recall: 69.5901  Gap_mIoU: 0.0000  
+
+--- Epoch 18/30 | LR: 4.262419e-05 ---
+Batch [0/117] | Tot: 0.0412 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.2203
+Batch [5/117] | Tot: 0.2849 | Seg: 0.0012 | Topo: 0.8393 | Gate: 0.0658
+Batch [10/117] | Tot: 0.4327 | Seg: 0.0024 | Topo: 0.8418 | Gate: 0.1913
+Batch [15/117] | Tot: 0.0962 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.1627
+Batch [20/117] | Tot: 0.1012 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.1589
+Batch [25/117] | Tot: 0.0984 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.1624
+Batch [30/117] | Tot: 0.3075 | Seg: 0.0036 | Topo: 0.8079 | Gate: 0.0950
+Batch [35/117] | Tot: 1.0646 | Seg: 0.0027 | Topo: 0.5524 | Gate: 0.9083
+Batch [40/117] | Tot: 0.3173 | Seg: 0.0002 | Topo: 0.9401 | Gate: 0.0634
+Batch [45/117] | Tot: 0.5149 | Seg: 0.0036 | Topo: 0.7726 | Gate: 0.3039
+Batch [50/117] | Tot: 0.7051 | Seg: 0.0017 | Topo: 0.7038 | Gate: 0.5177
+Batch [55/117] | Tot: 0.4324 | Seg: 0.0112 | Topo: 0.8669 | Gate: 0.1953
+Batch [60/117] | Tot: 0.6692 | Seg: 0.0079 | Topo: 0.6848 | Gate: 0.4784
+Batch [65/117] | Tot: 0.4066 | Seg: 0.0014 | Topo: 0.8583 | Gate: 0.1794
+Batch [70/117] | Tot: 0.4533 | Seg: 0.0030 | Topo: 0.7860 | Gate: 0.2374
+Batch [75/117] | Tot: 1.0030 | Seg: 0.0025 | Topo: 0.5522 | Gate: 0.8526
+Batch [80/117] | Tot: 0.4592 | Seg: 0.0019 | Topo: 0.6697 | Gate: 0.2795
+Batch [85/117] | Tot: 0.7622 | Seg: 0.0087 | Topo: 0.8276 | Gate: 0.4999
+Batch [90/117] | Tot: 0.2174 | Seg: 0.0000 | Topo: 0.9535 | Gate: -0.0308
+Batch [95/117] | Tot: 0.8732 | Seg: 0.0043 | Topo: 0.5060 | Gate: 0.7127
+Batch [100/117] | Tot: 0.6377 | Seg: 0.0010 | Topo: 0.6430 | Gate: 0.4645
+Batch [105/117] | Tot: 0.3653 | Seg: 0.0002 | Topo: 0.8653 | Gate: 0.1389
+Batch [110/117] | Tot: 0.8925 | Seg: 0.0019 | Topo: 0.5857 | Gate: 0.7308
+Batch [115/117] | Tot: 0.8450 | Seg: 0.0047 | Topo: 0.5296 | Gate: 0.6941
+[Train] Epoch/Step: 18 | Loss: 0.5091  LR: 0.0000  
+[Val] Epoch/Step: 18 | Accuracy: 99.2362  Precision: 54.7527  Recall: 70.1899  F1_Score: 61.5176  Standard_IoU: 44.4227  SDF_Relaxed_IoU: 79.8710  clDice: 81.1201  Pure_Soil_FPR: 0.0714  Insular_Gap_Recall: 69.9418  Gap_mIoU: 0.0000  
+
+--- Epoch 19/30 | LR: 3.782169e-05 ---
+Batch [0/117] | Tot: 0.0350 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.2239
+Batch [5/117] | Tot: 0.7157 | Seg: 0.0045 | Topo: 0.5221 | Gate: 0.5678
+Batch [10/117] | Tot: 0.2770 | Seg: 0.0009 | Topo: 0.8848 | Gate: 0.0462
+Batch [15/117] | Tot: 0.4755 | Seg: 0.0153 | Topo: 0.7970 | Gate: 0.2504
+Batch [20/117] | Tot: 0.2851 | Seg: 0.0011 | Topo: 0.8737 | Gate: 0.0437
+Batch [25/117] | Tot: 0.4708 | Seg: 0.0016 | Topo: 0.8142 | Gate: 0.2558
+Batch [30/117] | Tot: 0.8856 | Seg: 0.0017 | Topo: 0.5928 | Gate: 0.7235
+Batch [35/117] | Tot: 0.3974 | Seg: 0.0021 | Topo: 0.7805 | Gate: 0.1883
+Batch [40/117] | Tot: 0.2728 | Seg: 0.0013 | Topo: 0.8294 | Gate: 0.0551
+Batch [45/117] | Tot: 0.6302 | Seg: 0.0088 | Topo: 0.6807 | Gate: 0.4402
+Batch [50/117] | Tot: 0.4102 | Seg: 0.0016 | Topo: 0.7731 | Gate: 0.1940
+Batch [55/117] | Tot: 0.6727 | Seg: 0.0015 | Topo: 0.6587 | Gate: 0.4959
+Batch [60/117] | Tot: 0.6205 | Seg: 0.0017 | Topo: 0.7979 | Gate: 0.3719
+Batch [65/117] | Tot: 0.8793 | Seg: 0.0029 | Topo: 0.6288 | Gate: 0.6913
+Batch [70/117] | Tot: 0.8798 | Seg: 0.0078 | Topo: 0.6277 | Gate: 0.6908
+Batch [75/117] | Tot: 0.3812 | Seg: 0.0009 | Topo: 0.7209 | Gate: 0.1904
+Batch [80/117] | Tot: 0.7586 | Seg: 0.0055 | Topo: 0.7333 | Gate: 0.5593
+Batch [85/117] | Tot: 0.8643 | Seg: 0.0044 | Topo: 0.7655 | Gate: 0.6520
+Batch [90/117] | Tot: 0.2073 | Seg: 0.0004 | Topo: 0.8164 | Gate: -0.0064
+Batch [95/117] | Tot: 0.1028 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.1572
+Batch [100/117] | Tot: 0.0982 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.1591
+Batch [105/117] | Tot: 0.2007 | Seg: 0.0013 | Topo: 0.8423 | Gate: -0.0201
+Batch [110/117] | Tot: 0.2852 | Seg: 0.0009 | Topo: 0.7532 | Gate: 0.0858
+Batch [115/117] | Tot: 0.0926 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.1676
+[Train] Epoch/Step: 19 | Loss: 0.4729  LR: 0.0000  
+[Val] Epoch/Step: 19 | Accuracy: 99.2557  Precision: 55.8103  Recall: 69.2593  F1_Score: 61.8117  Standard_IoU: 44.7301  SDF_Relaxed_IoU: 81.1355  clDice: 82.4257  Pure_Soil_FPR: 0.0573  Insular_Gap_Recall: 68.4502  Gap_mIoU: 0.0000  
+
+--- Epoch 20/30 | LR: 3.318001e-05 ---
+Batch [0/117] | Tot: 0.7654 | Seg: 0.0114 | Topo: 0.6164 | Gate: 0.5856
+Batch [5/117] | Tot: 0.8051 | Seg: 0.0023 | Topo: 0.6130 | Gate: 0.6212
+Batch [10/117] | Tot: 0.5206 | Seg: 0.0012 | Topo: 0.8366 | Gate: 0.3021
+Batch [15/117] | Tot: 0.6867 | Seg: 0.0037 | Topo: 0.4267 | Gate: 0.5516
+Batch [20/117] | Tot: 0.4063 | Seg: 0.0019 | Topo: 0.7669 | Gate: 0.2014
+Batch [25/117] | Tot: 0.5890 | Seg: 0.0027 | Topo: 0.7876 | Gate: 0.3810
+Batch [30/117] | Tot: 0.4713 | Seg: 0.0017 | Topo: 0.7365 | Gate: 0.2628
+Batch [35/117] | Tot: 0.8241 | Seg: 0.0210 | Topo: 0.6324 | Gate: 0.6343
+Batch [40/117] | Tot: 0.5299 | Seg: 0.0014 | Topo: 0.7802 | Gate: 0.3183
+Batch [45/117] | Tot: 0.2047 | Seg: 0.0009 | Topo: 0.8809 | Gate: -0.0399
+Batch [50/117] | Tot: 1.1358 | Seg: 0.0025 | Topo: 0.5278 | Gate: 0.9840
+Batch [55/117] | Tot: 0.3364 | Seg: 0.0018 | Topo: 0.8335 | Gate: 0.1169
+Batch [60/117] | Tot: 0.8750 | Seg: 0.0159 | Topo: 0.6245 | Gate: 0.6920
+Batch [65/117] | Tot: 0.3375 | Seg: 0.0011 | Topo: 0.8473 | Gate: 0.1155
+Batch [70/117] | Tot: 0.3719 | Seg: 0.0003 | Topo: 0.9348 | Gate: 0.1295
+Batch [75/117] | Tot: 0.6061 | Seg: 0.0026 | Topo: 0.6352 | Gate: 0.4342
+Batch [80/117] | Tot: 0.2187 | Seg: 0.0173 | Topo: 0.8678 | Gate: -0.0375
+Batch [85/117] | Tot: -0.0051 | Seg: 0.0004 | Topo: 0.7729 | Gate: -0.2073
+Batch [90/117] | Tot: 0.0877 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.1725
+Batch [95/117] | Tot: 0.0888 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.1693
+Batch [100/117] | Tot: 0.0843 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.1739
+Batch [105/117] | Tot: 0.2056 | Seg: 0.0086 | Topo: 0.7963 | Gate: -0.0098
+Batch [110/117] | Tot: 0.4448 | Seg: 0.0013 | Topo: 0.7097 | Gate: 0.2575
+Batch [115/117] | Tot: 0.0879 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.1716
+[Train] Epoch/Step: 20 | Loss: 0.4706  LR: 0.0000  
+[Val] Epoch/Step: 20 | Accuracy: 99.2645  Precision: 56.4166  Recall: 67.8585  F1_Score: 61.6108  Standard_IoU: 44.5200  SDF_Relaxed_IoU: 81.0316  clDice: 82.2520  Pure_Soil_FPR: 0.0514  Insular_Gap_Recall: 66.5968  Gap_mIoU: 0.0000  
+
+--- Epoch 21/30 | LR: 2.875000e-05 ---
+Batch [0/117] | Tot: 0.4964 | Seg: 0.0138 | Topo: 0.6946 | Gate: 0.2978
+Batch [5/117] | Tot: 0.1742 | Seg: 0.0002 | Topo: 0.8600 | Gate: -0.0498
+Batch [10/117] | Tot: 0.1035 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.1546
+Batch [15/117] | Tot: 0.6808 | Seg: 0.0048 | Topo: 0.6151 | Gate: 0.5100
+Batch [20/117] | Tot: 0.7189 | Seg: 0.0061 | Topo: 0.6531 | Gate: 0.5258
+Batch [25/117] | Tot: 0.5830 | Seg: 0.0077 | Topo: 0.8193 | Gate: 0.3593
+Batch [30/117] | Tot: 0.3251 | Seg: 0.0009 | Topo: 0.7828 | Gate: 0.1020
+Batch [35/117] | Tot: 0.6399 | Seg: 0.0034 | Topo: 0.7111 | Gate: 0.4489
+Batch [40/117] | Tot: 0.6719 | Seg: 0.0013 | Topo: 0.6987 | Gate: 0.4866
+Batch [45/117] | Tot: 0.3512 | Seg: 0.0003 | Topo: 0.9218 | Gate: 0.0783
+Batch [50/117] | Tot: 0.8542 | Seg: 0.0046 | Topo: 0.4607 | Gate: 0.7220
+Batch [55/117] | Tot: 0.5254 | Seg: 0.0012 | Topo: 0.8053 | Gate: 0.3048
+Batch [60/117] | Tot: 0.0932 | Seg: 0.0000 | Topo: 0.9182 | Gate: -0.1444
+Batch [65/117] | Tot: 0.5500 | Seg: 0.0030 | Topo: 0.5245 | Gate: 0.4043
+Batch [70/117] | Tot: 0.4713 | Seg: 0.0014 | Topo: 0.7110 | Gate: 0.2675
+Batch [75/117] | Tot: 0.7181 | Seg: 0.0025 | Topo: 0.7217 | Gate: 0.5241
+Batch [80/117] | Tot: 0.8451 | Seg: 0.0028 | Topo: 0.3548 | Gate: 0.7418
+Batch [85/117] | Tot: 0.0119 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.2439
+Batch [90/117] | Tot: 0.0823 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.1774
+Batch [95/117] | Tot: 0.1755 | Seg: 0.0087 | Topo: 0.7972 | Gate: -0.0412
+Batch [100/117] | Tot: 0.0820 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.1777
+Batch [105/117] | Tot: 0.0800 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.1795
+Batch [110/117] | Tot: 0.0831 | Seg: 0.0031 | Topo: 0.8958 | Gate: -0.1540
+Batch [115/117] | Tot: 0.3473 | Seg: 0.0003 | Topo: 0.8871 | Gate: 0.1154
+[Train] Epoch/Step: 21 | Loss: 0.4528  LR: 0.0000  
+[Val] Epoch/Step: 21 | Accuracy: 99.2740  Precision: 56.8907  Recall: 68.2318  F1_Score: 62.0473  Standard_IoU: 44.9772  SDF_Relaxed_IoU: 81.7284  clDice: 82.9868  Pure_Soil_FPR: 0.0456  Insular_Gap_Recall: 67.1258  Gap_mIoU: 0.0000  
+🌟 [New Best-Score] Saved! Epoch=21 | Score=0.855133 (no gate) | F1=62.05% clDice=82.99% SDF=81.73% FPR=0.05% INS=67.13%
+🌟 [New Best-HPACS] Saved! Epoch=21 | Score=0.855133 | F1=62.05% clDice=82.99% SDF=81.73% FPR=0.05% INS=67.13%
+
+--- Epoch 22/30 | LR: 2.458020e-05 ---
+Batch [0/117] | Tot: -0.0209 | Seg: 0.0004 | Topo: 0.7704 | Gate: -0.2214
+Batch [5/117] | Tot: 0.0750 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.1855
+Batch [10/117] | Tot: 0.2400 | Seg: 0.0012 | Topo: 0.8410 | Gate: 0.0171
+Batch [15/117] | Tot: 0.7627 | Seg: 0.0047 | Topo: 0.4293 | Gate: 0.6410
+Batch [20/117] | Tot: 0.4286 | Seg: 0.0012 | Topo: 0.5396 | Gate: 0.2811
+Batch [25/117] | Tot: 0.0714 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.1883
+Batch [30/117] | Tot: 0.1766 | Seg: 0.0010 | Topo: 0.8174 | Gate: -0.0401
+Batch [35/117] | Tot: 0.3074 | Seg: 0.0002 | Topo: 0.8026 | Gate: 0.0987
+Batch [40/117] | Tot: 0.3296 | Seg: 0.0020 | Topo: 0.8323 | Gate: 0.1106
+Batch [45/117] | Tot: 1.0200 | Seg: 0.0174 | Topo: 0.6071 | Gate: 0.8376
+Batch [50/117] | Tot: 0.2713 | Seg: 0.0006 | Topo: 0.8643 | Gate: 0.0324
+Batch [55/117] | Tot: 0.2947 | Seg: 0.0017 | Topo: 0.8897 | Gate: 0.0630
+Batch [60/117] | Tot: 0.0918 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.1664
+Batch [65/117] | Tot: 0.3155 | Seg: 0.0016 | Topo: 0.9128 | Gate: 0.0606
+Batch [70/117] | Tot: 0.3977 | Seg: 0.0016 | Topo: 0.7681 | Gate: 0.1923
+Batch [75/117] | Tot: 0.3380 | Seg: 0.0007 | Topo: 0.7193 | Gate: 0.1490
+Batch [80/117] | Tot: 0.2920 | Seg: 0.0002 | Topo: 0.8186 | Gate: 0.0798
+Batch [85/117] | Tot: 0.2534 | Seg: 0.0007 | Topo: 0.8981 | Gate: 0.0159
+Batch [90/117] | Tot: 0.2630 | Seg: 0.0053 | Topo: 0.8150 | Gate: 0.0413
+Batch [95/117] | Tot: 0.7165 | Seg: 0.0057 | Topo: 0.6520 | Gate: 0.5393
+Batch [100/117] | Tot: 0.3325 | Seg: 0.0005 | Topo: 0.9019 | Gate: 0.0997
+Batch [105/117] | Tot: 0.4440 | Seg: 0.0007 | Topo: 0.6953 | Gate: 0.2615
+Batch [110/117] | Tot: 0.2315 | Seg: 0.0016 | Topo: 0.7735 | Gate: 0.0265
+Batch [115/117] | Tot: 0.5407 | Seg: 0.0054 | Topo: 0.7549 | Gate: 0.3366
+[Train] Epoch/Step: 22 | Loss: 0.4250  LR: 0.0000  
+[Val] Epoch/Step: 22 | Accuracy: 99.2480  Precision: 55.4009  Recall: 69.4509  F1_Score: 61.6353  Standard_IoU: 44.5455  SDF_Relaxed_IoU: 80.2740  clDice: 81.6341  Pure_Soil_FPR: 0.0563  Insular_Gap_Recall: 68.4868  Gap_mIoU: 0.0000  
+
+--- Epoch 23/30 | LR: 2.071630e-05 ---
+Batch [0/117] | Tot: 0.1974 | Seg: 0.0027 | Topo: 0.8919 | Gate: -0.0407
+Batch [5/117] | Tot: 0.1577 | Seg: 0.0012 | Topo: 0.7817 | Gate: -0.0473
+Batch [10/117] | Tot: 0.3869 | Seg: 0.0037 | Topo: 0.6247 | Gate: 0.2180
+Batch [15/117] | Tot: 0.0949 | Seg: 0.0016 | Topo: 0.9168 | Gate: -0.1645
+Batch [20/117] | Tot: 0.2244 | Seg: 0.0026 | Topo: 0.8074 | Gate: 0.0099
+Batch [25/117] | Tot: 0.0605 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.1979
+Batch [30/117] | Tot: 0.4653 | Seg: 0.0123 | Topo: 0.8029 | Gate: 0.2421
+Batch [35/117] | Tot: 0.8807 | Seg: 0.0082 | Topo: 0.5077 | Gate: 0.7344
+Batch [40/117] | Tot: 0.3665 | Seg: 0.0012 | Topo: 0.6822 | Gate: 0.1852
+Batch [45/117] | Tot: 0.8641 | Seg: 0.0026 | Topo: 0.5486 | Gate: 0.7132
+Batch [50/117] | Tot: 0.5463 | Seg: 0.0095 | Topo: 0.8976 | Gate: 0.3048
+Batch [55/117] | Tot: 0.8746 | Seg: 0.0046 | Topo: 0.5418 | Gate: 0.7067
+Batch [60/117] | Tot: 0.5778 | Seg: 0.0018 | Topo: 0.8242 | Gate: 0.3407
+Batch [65/117] | Tot: 0.5936 | Seg: 0.0031 | Topo: 0.7406 | Gate: 0.3966
+Batch [70/117] | Tot: 0.3534 | Seg: 0.0022 | Topo: 0.7877 | Gate: 0.1454
+Batch [75/117] | Tot: 0.6607 | Seg: 0.0037 | Topo: 0.6348 | Gate: 0.4865
+Batch [80/117] | Tot: 0.0825 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.1737
+Batch [85/117] | Tot: 0.0860 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.1734
+Batch [90/117] | Tot: 0.6057 | Seg: 0.0069 | Topo: 0.6352 | Gate: 0.4138
+Batch [95/117] | Tot: 0.2413 | Seg: 0.0007 | Topo: 0.8946 | Gate: 0.0078
+Batch [100/117] | Tot: 0.7178 | Seg: 0.0104 | Topo: 0.5869 | Gate: 0.5496
+Batch [105/117] | Tot: 0.6941 | Seg: 0.0023 | Topo: 0.5876 | Gate: 0.5353
+Batch [110/117] | Tot: 0.3851 | Seg: 0.0008 | Topo: 0.8583 | Gate: 0.1589
+Batch [115/117] | Tot: -0.0115 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.2673
+[Train] Epoch/Step: 23 | Loss: 0.4439  LR: 0.0000  
+[Val] Epoch/Step: 23 | Accuracy: 99.2114  Precision: 53.5001  Recall: 71.2977  F1_Score: 61.1298  Standard_IoU: 44.0194  SDF_Relaxed_IoU: 79.5591  clDice: 80.9197  Pure_Soil_FPR: 0.0832  Insular_Gap_Recall: 70.4886  Gap_mIoU: 0.0000  
+
+--- Epoch 24/30 | LR: 1.720062e-05 ---
+Batch [0/117] | Tot: 1.1459 | Seg: 0.0185 | Topo: 0.4278 | Gate: 1.0081
+Batch [5/117] | Tot: 0.6747 | Seg: 0.0013 | Topo: 0.7536 | Gate: 0.4608
+Batch [10/117] | Tot: 0.5428 | Seg: 0.0007 | Topo: 0.7009 | Gate: 0.3571
+Batch [15/117] | Tot: 0.6789 | Seg: 0.0030 | Topo: 0.6458 | Gate: 0.5004
+Batch [20/117] | Tot: 0.7056 | Seg: 0.0067 | Topo: 0.7151 | Gate: 0.5087
+Batch [25/117] | Tot: 0.6111 | Seg: 0.0198 | Topo: 0.6246 | Gate: 0.4136
+Batch [30/117] | Tot: 0.4962 | Seg: 0.0058 | Topo: 0.7676 | Gate: 0.2865
+Batch [35/117] | Tot: 0.5087 | Seg: 0.0014 | Topo: 0.8114 | Gate: 0.2945
+Batch [40/117] | Tot: 1.2131 | Seg: 0.0035 | Topo: 0.4027 | Gate: 1.0981
+Batch [45/117] | Tot: 0.6391 | Seg: 0.0030 | Topo: 0.6164 | Gate: 0.4710
+Batch [50/117] | Tot: 0.2810 | Seg: 0.0014 | Topo: 0.8542 | Gate: 0.0568
+Batch [55/117] | Tot: 0.6323 | Seg: 0.0045 | Topo: 0.7120 | Gate: 0.4392
+Batch [60/117] | Tot: 0.2800 | Seg: 0.0017 | Topo: 0.9195 | Gate: 0.0420
+Batch [65/117] | Tot: 0.0885 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.1688
+Batch [70/117] | Tot: 0.3177 | Seg: 0.0006 | Topo: 0.7846 | Gate: 0.1123
+Batch [75/117] | Tot: 0.4598 | Seg: 0.0053 | Topo: 0.7312 | Gate: 0.2616
+Batch [80/117] | Tot: 0.5999 | Seg: 0.0016 | Topo: 0.7188 | Gate: 0.4089
+Batch [85/117] | Tot: 0.3222 | Seg: 0.0010 | Topo: 0.8392 | Gate: 0.1008
+Batch [90/117] | Tot: 0.0818 | Seg: 0.0016 | Topo: 0.9173 | Gate: -0.1788
+Batch [95/117] | Tot: 0.4228 | Seg: 0.0098 | Topo: 0.7063 | Gate: 0.2284
+Batch [100/117] | Tot: 0.1816 | Seg: 0.0004 | Topo: 0.8011 | Gate: -0.0281
+Batch [105/117] | Tot: 0.0554 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.2046
+Batch [110/117] | Tot: 0.4711 | Seg: 0.0015 | Topo: 0.5972 | Gate: 0.3104
+Batch [115/117] | Tot: -0.0234 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.2817
+[Train] Epoch/Step: 24 | Loss: 0.4311  LR: 0.0000  
+[Val] Epoch/Step: 24 | Accuracy: 99.2779  Precision: 57.1214  Recall: 68.1060  F1_Score: 62.1320  Standard_IoU: 45.0663  SDF_Relaxed_IoU: 81.9506  clDice: 83.3816  Pure_Soil_FPR: 0.0402  Insular_Gap_Recall: 66.3771  Gap_mIoU: 0.0000  
+🌟 [New Best-Score] Saved! Epoch=24 | Score=0.857934 (no gate) | F1=62.13% clDice=83.38% SDF=81.95% FPR=0.04% INS=66.38%
+🌟 [New Best-HPACS] Saved! Epoch=24 | Score=0.857934 | F1=62.13% clDice=83.38% SDF=81.95% FPR=0.04% INS=66.38%
+
+--- Epoch 25/30 | LR: 1.407169e-05 ---
+Batch [0/117] | Tot: 0.1916 | Seg: 0.0002 | Topo: 0.7804 | Gate: -0.0110
+Batch [5/117] | Tot: 0.2300 | Seg: 0.0011 | Topo: 0.7915 | Gate: 0.0243
+Batch [10/117] | Tot: 0.2309 | Seg: 0.0011 | Topo: 0.8405 | Gate: 0.0105
+Batch [15/117] | Tot: 0.0591 | Seg: 0.0028 | Topo: 0.8890 | Gate: -0.1787
+Batch [20/117] | Tot: 0.0573 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.2038
+Batch [25/117] | Tot: 0.3012 | Seg: 0.0005 | Topo: 0.8396 | Gate: 0.0840
+Batch [30/117] | Tot: -0.0247 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.2813
+Batch [35/117] | Tot: 0.5306 | Seg: 0.0052 | Topo: 0.7458 | Gate: 0.3298
+Batch [40/117] | Tot: 0.7086 | Seg: 0.0032 | Topo: 0.5738 | Gate: 0.5509
+Batch [45/117] | Tot: 0.5378 | Seg: 0.0015 | Topo: 0.7801 | Gate: 0.3317
+Batch [50/117] | Tot: 0.2333 | Seg: 0.0006 | Topo: 0.8630 | Gate: -0.0047
+Batch [55/117] | Tot: 0.1835 | Seg: 0.0000 | Topo: 0.9213 | Gate: -0.0532
+Batch [60/117] | Tot: 0.7583 | Seg: 0.0180 | Topo: 0.4807 | Gate: 0.6086
+Batch [65/117] | Tot: 0.9065 | Seg: 0.0051 | Topo: 0.6314 | Gate: 0.7318
+Batch [70/117] | Tot: 0.3383 | Seg: 0.0005 | Topo: 0.7538 | Gate: 0.1388
+Batch [75/117] | Tot: 0.7411 | Seg: 0.0019 | Topo: 0.5173 | Gate: 0.6002
+Batch [80/117] | Tot: 0.3070 | Seg: 0.0011 | Topo: 0.8014 | Gate: 0.0811
+Batch [85/117] | Tot: 0.0742 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.1830
+Batch [90/117] | Tot: 0.3324 | Seg: 0.0006 | Topo: 0.6645 | Gate: 0.1433
+Batch [95/117] | Tot: 0.2938 | Seg: 0.0180 | Topo: 0.8172 | Gate: 0.0624
+Batch [100/117] | Tot: 0.0934 | Seg: 0.0011 | Topo: 0.9789 | Gate: -0.1712
+Batch [105/117] | Tot: 0.7824 | Seg: 0.0029 | Topo: 0.5088 | Gate: 0.6429
+Batch [110/117] | Tot: 0.4980 | Seg: 0.0029 | Topo: 0.7690 | Gate: 0.2916
+Batch [115/117] | Tot: 0.6412 | Seg: 0.0029 | Topo: 0.7264 | Gate: 0.4455
+[Train] Epoch/Step: 25 | Loss: 0.4158  LR: 0.0000  
+[Val] Epoch/Step: 25 | Accuracy: 99.2313  Precision: 54.4694  Recall: 70.8442  F1_Score: 61.5869  Standard_IoU: 44.4950  SDF_Relaxed_IoU: 80.1114  clDice: 81.4774  Pure_Soil_FPR: 0.0663  Insular_Gap_Recall: 69.9625  Gap_mIoU: 0.0000  
+
+--- Epoch 26/30 | LR: 1.136379e-05 ---
+Batch [0/117] | Tot: 0.7689 | Seg: 0.0008 | Topo: 0.7213 | Gate: 0.5789
+Batch [5/117] | Tot: 0.4835 | Seg: 0.0015 | Topo: 0.7869 | Gate: 0.2771
+Batch [10/117] | Tot: 0.5927 | Seg: 0.0008 | Topo: 0.6674 | Gate: 0.4146
+Batch [15/117] | Tot: 0.2838 | Seg: 0.0013 | Topo: 0.9017 | Gate: 0.0473
+Batch [20/117] | Tot: 0.4352 | Seg: 0.0022 | Topo: 0.6532 | Gate: 0.2401
+Batch [25/117] | Tot: 0.6727 | Seg: 0.0191 | Topo: 0.7069 | Gate: 0.4666
+Batch [30/117] | Tot: 0.5547 | Seg: 0.0173 | Topo: 0.7696 | Gate: 0.3229
+Batch [35/117] | Tot: 0.4095 | Seg: 0.0013 | Topo: 0.8094 | Gate: 0.1979
+Batch [40/117] | Tot: 0.6555 | Seg: 0.0197 | Topo: 0.5906 | Gate: 0.4775
+Batch [45/117] | Tot: 0.6404 | Seg: 0.0015 | Topo: 0.5170 | Gate: 0.4985
+Batch [50/117] | Tot: 0.6108 | Seg: 0.0044 | Topo: 0.6371 | Gate: 0.4355
+Batch [55/117] | Tot: 0.3715 | Seg: 0.0018 | Topo: 0.8488 | Gate: 0.1474
+Batch [60/117] | Tot: 1.0379 | Seg: 0.0052 | Topo: 0.3258 | Gate: 0.9404
+Batch [65/117] | Tot: 0.5053 | Seg: 0.0058 | Topo: 0.7624 | Gate: 0.2858
+Batch [70/117] | Tot: 0.4757 | Seg: 0.0063 | Topo: 0.8019 | Gate: 0.2613
+Batch [75/117] | Tot: 0.5884 | Seg: 0.0038 | Topo: 0.7416 | Gate: 0.3794
+Batch [80/117] | Tot: 0.8050 | Seg: 0.0043 | Topo: 0.7060 | Gate: 0.6070
+Batch [85/117] | Tot: -0.0351 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.2914
+Batch [90/117] | Tot: 0.0413 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.2177
+Batch [95/117] | Tot: 0.0468 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.2112
+Batch [100/117] | Tot: 0.1309 | Seg: 0.0001 | Topo: 0.8096 | Gate: -0.0803
+Batch [105/117] | Tot: 0.0439 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.2123
+Batch [110/117] | Tot: 0.0449 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.2154
+Batch [115/117] | Tot: 0.2388 | Seg: 0.0007 | Topo: 0.8265 | Gate: 0.0240
+[Train] Epoch/Step: 26 | Loss: 0.4132  LR: 0.0000  
+[Val] Epoch/Step: 26 | Accuracy: 99.2673  Precision: 56.4725  Recall: 68.7284  F1_Score: 62.0006  Standard_IoU: 44.9281  SDF_Relaxed_IoU: 81.8784  clDice: 83.2745  Pure_Soil_FPR: 0.0434  Insular_Gap_Recall: 67.2636  Gap_mIoU: 0.0000  
+
+--- Epoch 27/30 | LR: 9.106591e-06 ---
+Batch [0/117] | Tot: -0.0653 | Seg: 0.0005 | Topo: 0.7675 | Gate: -0.2656
+Batch [5/117] | Tot: 0.0394 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.2183
+Batch [10/117] | Tot: 0.1917 | Seg: 0.0036 | Topo: 0.8055 | Gate: -0.0230
+Batch [15/117] | Tot: 0.0475 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.2111
+Batch [20/117] | Tot: 0.2404 | Seg: 0.0011 | Topo: 0.9049 | Gate: 0.0026
+Batch [25/117] | Tot: 0.1536 | Seg: 0.0001 | Topo: 0.7702 | Gate: -0.0464
+Batch [30/117] | Tot: 0.0464 | Seg: 0.0029 | Topo: 0.8870 | Gate: -0.1902
+Batch [35/117] | Tot: 0.8801 | Seg: 0.0023 | Topo: 0.5991 | Gate: 0.7184
+Batch [40/117] | Tot: 0.7900 | Seg: 0.0039 | Topo: 0.4978 | Gate: 0.6508
+Batch [45/117] | Tot: 0.7380 | Seg: 0.0067 | Topo: 0.4947 | Gate: 0.5970
+Batch [50/117] | Tot: 0.4630 | Seg: 0.0019 | Topo: 0.8335 | Gate: 0.2450
+Batch [55/117] | Tot: 0.5190 | Seg: 0.0014 | Topo: 0.8407 | Gate: 0.2986
+Batch [60/117] | Tot: 0.2218 | Seg: 0.0021 | Topo: 0.7556 | Gate: 0.0072
+Batch [65/117] | Tot: 0.7548 | Seg: 0.0029 | Topo: 0.6181 | Gate: 0.5718
+Batch [70/117] | Tot: 0.2693 | Seg: 0.0021 | Topo: 0.9009 | Gate: 0.0325
+Batch [75/117] | Tot: 0.4628 | Seg: 0.0013 | Topo: 0.7757 | Gate: 0.2452
+Batch [80/117] | Tot: 0.9484 | Seg: 0.0034 | Topo: 0.4053 | Gate: 0.8322
+Batch [85/117] | Tot: 0.2555 | Seg: 0.0072 | Topo: 0.8208 | Gate: 0.0331
+Batch [90/117] | Tot: 0.6093 | Seg: 0.0052 | Topo: 0.7529 | Gate: 0.4039
+Batch [95/117] | Tot: 0.6447 | Seg: 0.0214 | Topo: 0.4731 | Gate: 0.4841
+Batch [100/117] | Tot: 0.4746 | Seg: 0.0003 | Topo: 0.7998 | Gate: 0.2657
+Batch [105/117] | Tot: 0.3793 | Seg: 0.0006 | Topo: 0.7212 | Gate: 0.1889
+Batch [110/117] | Tot: 0.5826 | Seg: 0.0037 | Topo: 0.7726 | Gate: 0.3760
+Batch [115/117] | Tot: 0.2023 | Seg: 0.0012 | Topo: 0.7931 | Gate: -0.0058
+[Train] Epoch/Step: 27 | Loss: 0.4080  LR: 0.0000  
+[Val] Epoch/Step: 27 | Accuracy: 99.2310  Precision: 54.4496  Recall: 70.8969  F1_Score: 61.5942  Standard_IoU: 44.5026  SDF_Relaxed_IoU: 80.2806  clDice: 81.6898  Pure_Soil_FPR: 0.0670  Insular_Gap_Recall: 69.6662  Gap_mIoU: 0.0000  
+
+--- Epoch 28/30 | LR: 7.324815e-06 ---
+Batch [0/117] | Tot: -0.0349 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.2946
+Batch [5/117] | Tot: 0.4123 | Seg: 0.0015 | Topo: 0.7321 | Gate: 0.2194
+Batch [10/117] | Tot: 0.9719 | Seg: 0.0234 | Topo: 0.5688 | Gate: 0.7926
+Batch [15/117] | Tot: 0.7898 | Seg: 0.0092 | Topo: 0.4712 | Gate: 0.6514
+Batch [20/117] | Tot: 0.5389 | Seg: 0.0033 | Topo: 0.7699 | Gate: 0.3210
+Batch [25/117] | Tot: 0.6098 | Seg: 0.0013 | Topo: 0.6713 | Gate: 0.4334
+Batch [30/117] | Tot: 0.0684 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.1916
+Batch [35/117] | Tot: 0.2112 | Seg: 0.0016 | Topo: 0.8287 | Gate: -0.0066
+Batch [40/117] | Tot: 0.6879 | Seg: 0.0040 | Topo: 0.7655 | Gate: 0.4842
+Batch [45/117] | Tot: 0.5585 | Seg: 0.0037 | Topo: 0.7998 | Gate: 0.3463
+Batch [50/117] | Tot: 0.4112 | Seg: 0.0026 | Topo: 0.7931 | Gate: 0.2000
+Batch [55/117] | Tot: 0.7212 | Seg: 0.0023 | Topo: 0.4531 | Gate: 0.5955
+Batch [60/117] | Tot: 0.7285 | Seg: 0.0017 | Topo: 0.7071 | Gate: 0.5411
+Batch [65/117] | Tot: 0.3092 | Seg: 0.0012 | Topo: 0.8644 | Gate: 0.0851
+Batch [70/117] | Tot: 0.3159 | Seg: 0.0018 | Topo: 0.6528 | Gate: 0.1400
+Batch [75/117] | Tot: 0.5834 | Seg: 0.0025 | Topo: 0.6624 | Gate: 0.4047
+Batch [80/117] | Tot: 0.3983 | Seg: 0.0004 | Topo: 0.7817 | Gate: 0.1778
+Batch [85/117] | Tot: 0.6474 | Seg: 0.0012 | Topo: 0.6332 | Gate: 0.4789
+Batch [90/117] | Tot: 0.0366 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.2198
+Batch [95/117] | Tot: 0.1521 | Seg: 0.0001 | Topo: 0.7710 | Gate: -0.0489
+Batch [100/117] | Tot: 0.1834 | Seg: 0.0003 | Topo: 0.8777 | Gate: -0.0464
+Batch [105/117] | Tot: 0.2728 | Seg: 0.0022 | Topo: 0.7559 | Gate: 0.0527
+Batch [110/117] | Tot: 0.0336 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.2221
+Batch [115/117] | Tot: 0.0340 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.2246
+[Train] Epoch/Step: 28 | Loss: 0.4133  LR: 0.0000  
+[Val] Epoch/Step: 28 | Accuracy: 99.2493  Precision: 55.4027  Recall: 70.1690  F1_Score: 61.9176  Standard_IoU: 44.8411  SDF_Relaxed_IoU: 81.1363  clDice: 82.5704  Pure_Soil_FPR: 0.0543  Insular_Gap_Recall: 68.7685  Gap_mIoU: 0.0000  
+
+--- Epoch 29/30 | LR: 6.037989e-06 ---
+Batch [0/117] | Tot: -0.0455 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.3017
+Batch [5/117] | Tot: 0.1354 | Seg: 0.0010 | Topo: 0.7897 | Gate: -0.0725
+Batch [10/117] | Tot: 0.0369 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.2231
+Batch [15/117] | Tot: 0.6018 | Seg: 0.0014 | Topo: 0.5060 | Gate: 0.4628
+Batch [20/117] | Tot: 0.1402 | Seg: 0.0005 | Topo: 0.8365 | Gate: -0.0774
+Batch [25/117] | Tot: 0.0376 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.2212
+Batch [30/117] | Tot: 0.0331 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.2271
+Batch [35/117] | Tot: 0.7307 | Seg: 0.0051 | Topo: 0.4754 | Gate: 0.5935
+Batch [40/117] | Tot: 0.3465 | Seg: 0.0010 | Topo: 0.8019 | Gate: 0.1345
+Batch [45/117] | Tot: 0.4516 | Seg: 0.0018 | Topo: 0.6642 | Gate: 0.2750
+Batch [50/117] | Tot: 0.5059 | Seg: 0.0144 | Topo: 0.6530 | Gate: 0.3155
+Batch [55/117] | Tot: 0.7091 | Seg: 0.0062 | Topo: 0.6299 | Gate: 0.5360
+Batch [60/117] | Tot: 0.2091 | Seg: 0.0016 | Topo: 0.8186 | Gate: -0.0051
+Batch [65/117] | Tot: 0.4296 | Seg: 0.0033 | Topo: 0.7420 | Gate: 0.2282
+Batch [70/117] | Tot: 0.3895 | Seg: 0.0013 | Topo: 0.6989 | Gate: 0.1902
+Batch [75/117] | Tot: 0.2874 | Seg: 0.0025 | Topo: 0.7684 | Gate: 0.0826
+Batch [80/117] | Tot: 0.2843 | Seg: 0.0028 | Topo: 0.8790 | Gate: 0.0526
+Batch [85/117] | Tot: 0.4163 | Seg: 0.0033 | Topo: 0.9317 | Gate: 0.1700
+Batch [90/117] | Tot: 0.3470 | Seg: 0.0023 | Topo: 0.6530 | Gate: 0.1741
+Batch [95/117] | Tot: 0.1535 | Seg: 0.0002 | Topo: 0.8613 | Gate: -0.0700
+Batch [100/117] | Tot: 0.6179 | Seg: 0.0011 | Topo: 0.7150 | Gate: 0.4298
+Batch [105/117] | Tot: 0.6547 | Seg: 0.0044 | Topo: 0.6172 | Gate: 0.4707
+Batch [110/117] | Tot: 0.7949 | Seg: 0.0015 | Topo: 0.6758 | Gate: 0.6161
+Batch [115/117] | Tot: 0.7037 | Seg: 0.0025 | Topo: 0.5121 | Gate: 0.5625
+[Train] Epoch/Step: 29 | Loss: 0.4138  LR: 0.0000  
+[Val] Epoch/Step: 29 | Accuracy: 99.2336  Precision: 54.5853  Recall: 70.7332  F1_Score: 61.6189  Standard_IoU: 44.5284  SDF_Relaxed_IoU: 80.3911  clDice: 81.8468  Pure_Soil_FPR: 0.0650  Insular_Gap_Recall: 69.8771  Gap_mIoU: 0.0000  
+
+--- Epoch 30/30 | LR: 5.260210e-06 ---
+Batch [0/117] | Tot: -0.0693 | Seg: 0.0004 | Topo: 0.7666 | Gate: -0.2677
+Batch [5/117] | Tot: 0.0376 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.2225
+Batch [10/117] | Tot: 0.3608 | Seg: 0.0038 | Topo: 0.5778 | Gate: 0.2052
+Batch [15/117] | Tot: 0.2863 | Seg: 0.0002 | Topo: 0.8175 | Gate: 0.0726
+Batch [20/117] | Tot: 0.3161 | Seg: 0.0007 | Topo: 0.5457 | Gate: 0.1701
+Batch [25/117] | Tot: 0.5035 | Seg: 0.0098 | Topo: 0.7068 | Gate: 0.3099
+Batch [30/117] | Tot: 0.0513 | Seg: 0.0017 | Topo: 0.9164 | Gate: -0.2065
+Batch [35/117] | Tot: 0.7249 | Seg: 0.0041 | Topo: 0.6301 | Gate: 0.5523
+Batch [40/117] | Tot: 0.4619 | Seg: 0.0041 | Topo: 0.7488 | Gate: 0.2608
+Batch [45/117] | Tot: 0.2288 | Seg: 0.0021 | Topo: 0.8502 | Gate: 0.0074
+Batch [50/117] | Tot: 0.0612 | Seg: 0.0000 | Topo: 1.0000 | Gate: -0.1971
+Batch [55/117] | Tot: 0.7261 | Seg: 0.0095 | Topo: 0.6330 | Gate: 0.5486
+Batch [60/117] | Tot: 0.7633 | Seg: 0.0035 | Topo: 0.4915 | Gate: 0.6269
+Batch [65/117] | Tot: 0.2981 | Seg: 0.0024 | Topo: 0.7285 | Gate: 0.1022
+Batch [70/117] | Tot: 0.2771 | Seg: 0.0005 | Topo: 0.8226 | Gate: 0.0636
+Batch [75/117] | Tot: 0.4399 | Seg: 0.0163 | Topo: 0.7152 | Gate: 0.2305
+Batch [80/117] | Tot: 0.4933 | Seg: 0.0022 | Topo: 0.7470 | Gate: 0.2964
+Batch [85/117] | Tot: 0.5064 | Seg: 0.0017 | Topo: 0.6879 | Gate: 0.3219
+Batch [90/117] | Tot: 0.9414 | Seg: 0.0044 | Topo: 0.4972 | Gate: 0.8022
+Batch [95/117] | Tot: 0.0585 | Seg: 0.0002 | Topo: 0.9341 | Gate: -0.1842
+Batch [100/117] | Tot: 0.3673 | Seg: 0.0014 | Topo: 0.8453 | Gate: 0.1455
+Batch [105/117] | Tot: 1.2996 | Seg: 0.0043 | Topo: 0.2515 | Gate: 1.2223
+Batch [110/117] | Tot: 0.9445 | Seg: 0.0164 | Topo: 0.5190 | Gate: 0.7825
+Batch [115/117] | Tot: 0.3103 | Seg: 0.0017 | Topo: 0.7365 | Gate: 0.1151
+[Train] Epoch/Step: 30 | Loss: 0.4064  LR: 0.0000  
+[Val] Epoch/Step: 30 | Accuracy: 99.2348  Precision: 54.6420  Recall: 70.7642  F1_Score: 61.6668  Standard_IoU: 44.5784  SDF_Relaxed_IoU: 80.3502  clDice: 81.7763  Pure_Soil_FPR: 0.0645  Insular_Gap_Recall: 69.8714  Gap_mIoU: 0.0000  
+
+🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+🚀 RUNNING FINAL EVALUATION ON OFFICIAL TEST SPLIT...
+🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+✅ Successfully loaded physics adapters from /root/autodl-tmp/runs_rootsam_pro/Cotton_736x552_DPI150_FULL_20260228_223153_62aae2e0_abla_full_fair_s0_Cotton_736x552_DPI150/checkpoints/rootsam_pro_Cotton_736x552_DPI150_FULL_20260228_223153_62aae2e0_abla_full_fair_s0_Cotton_736x552_DPI150_best.pth
+[Test_Final:BEST_HPACS] Epoch/Step: 30 | Accuracy: 99.4755  Precision: 52.8571  Recall: 69.5998  F1_Score: 60.0839  Standard_IoU: 42.9428  SDF_Relaxed_IoU: 84.5830  clDice: 85.2550  Pure_Soil_FPR: 0.0206  Insular_Gap_Recall: 70.3821  Gap_mIoU: 0.0000  
+✅ Successfully loaded physics adapters from /root/autodl-tmp/runs_rootsam_pro/Cotton_736x552_DPI150_FULL_20260228_223153_62aae2e0_abla_full_fair_s0_Cotton_736x552_DPI150/checkpoints/rootsam_pro_Cotton_736x552_DPI150_FULL_20260228_223153_62aae2e0_abla_full_fair_s0_Cotton_736x552_DPI150_best_score.pth
+[Test_Final:BEST_SCORE] Epoch/Step: 30 | Accuracy: 99.4755  Precision: 52.8571  Recall: 69.5998  F1_Score: 60.0839  Standard_IoU: 42.9428  SDF_Relaxed_IoU: 84.5830  clDice: 85.2550  Pure_Soil_FPR: 0.0206  Insular_Gap_Recall: 70.3821  Gap_mIoU: 0.0000  
+✅ Successfully loaded physics adapters from /root/autodl-tmp/runs_rootsam_pro/Cotton_736x552_DPI150_FULL_20260228_223153_62aae2e0_abla_full_fair_s0_Cotton_736x552_DPI150/checkpoints/rootsam_pro_Cotton_736x552_DPI150_FULL_20260228_223153_62aae2e0_abla_full_fair_s0_Cotton_736x552_DPI150_last.pth
+[Test_Final:LAST] Epoch/Step: 30 | Accuracy: 99.4370  Precision: 50.2575  Recall: 71.9676  F1_Score: 59.1844  Standard_IoU: 42.0298  SDF_Relaxed_IoU: 83.4126  clDice: 84.2024  Pure_Soil_FPR: 0.0346  Insular_Gap_Recall: 72.5235  Gap_mIoU: 0.0000  
+📊 Quantitative Results securely appended to Table_4_1_Ablation_Results.csv. Ready for LaTeX integration!
+
+🎉 All processes completed successfully!
+📁 CSV saved under: /root/autodl-tmp/runs_rootsam_pro/Cotton_736x552_DPI150_FULL_20260228_223153_62aae2e0_abla_full_fair_s0_Cotton_736x552_DPI150/report
+  - train_val_history.csv   (每个 epoch 的 train_loss + Val 全指标)
+  - best_events.csv         (每次 new best 的全指标快照)
+  - best_summary.csv        (当前 best 的单行汇总)
+  - test_runs.csv           (每次 final test 的全指标记录)
+  - test_summary.csv        (当前 final test 的单行汇总)

@@ -1,0 +1,428 @@
+import os
+import csv
+import torch
+import numpy as np
+import torch.nn.functional as F
+import torch.utils.checkpoint as checkpoint
+
+from engine.metrics import BeyondGT_MetricsTracker, compute_frame_metrics
+from utils.transforms import PhysicalPreservingTransforms
+
+
+def _get_amp_dtype(device: torch.device):
+    if device.type == "cuda":
+        return torch.bfloat16 if torch.cuda.is_bf16_supported() else torch.float16
+    return torch.bfloat16
+
+
+def train_epoch(model, dataloader, optimizer, scaler, criterion, device, cfg):
+    """Truncated-BPTT training over fixed-length clips.
+
+    - Checkpoint-safe: model forward returns NEW state; outer loop only does pointer handoff.
+    - Compatible with optional 6th return (gate_loss).
+    """
+    model.train()
+    epoch_loss = 0.0
+
+    # Component loss meters (epoch averages)
+    comp_sum = {
+        'Total': 0.0,
+        'Seg_Exempt': 0.0,
+        'Probe': 0.0,
+        'Kinematic': 0.0,
+        'Presence': 0.0,
+        'KeyframeGate': 0.0,
+    }
+    comp_count = 0
+
+
+    # OOM safety: allow gradients only for explicitly trainable modules
+    for name, param in model.named_parameters():
+        if param.requires_grad:
+            allowed = (
+                ("srd" in name) or ("kmr" in name) or ("kappa" in name)
+                or ("temporal_mlp" in name) or ("keyframe_mlp" in name) or ("key_in_norm" in name)
+                # InfoGain value head (small, safe trainables)
+                or ("value_in_norm" in name) or ("value_mlp" in name) or ("value_half_life" in name)
+                or ("bio_half_life" in name) or ("ptr_half_life" in name)
+                or ("pres_" in name) or ("abs_bias" in name)
+                or ("eta_energy" in name) or ("theta_frag" in name)
+                or ("key_temp" in name) or ("key_log_vars" in name)
+                or ("resource_lambda" in name)
+                or (".mlp.adapter." in name)
+            )
+            assert allowed, f"OOM Danger! Parameter {name} leaked gradient."
+
+    use_amp = bool(getattr(cfg, "AMP", True))
+    amp_dtype = _get_amp_dtype(device)
+
+    for step, batch in enumerate(dataloader):
+        images = batch["images"].to(device)
+        masks_gt = batch["masks_gt"].to(device)
+        delta_ts = batch["delta_t"].to(device)
+        W_SDF = batch["W_SDF"].to(device)
+        pad_infos = batch["pad_info"].to(device)
+
+        B, T = images.shape[:2]
+
+        # v6+ functional state init (Dual FIFO + time axis + presence memory)
+        inference_state = {
+            "output_dict": {}, "obj_ptr_tks": {}, "time_dict": {}, "value_dict": {},
+            "prompted_output_dict": {}, "prompted_obj_ptr_tks": {}, "prompted_time_dict": {}, "prompted_value_dict": {},
+            "time_days": torch.zeros(B, dtype=torch.float32, device=device),
+            "prev_present": torch.zeros(B, dtype=torch.float32, device=device),
+            "is_mem_empty": torch.ones(B, dtype=torch.bool, device=device),
+        }
+
+        F_track_prev = None
+        total_loss = None
+        last_loss_dict = None
+
+        optimizer.zero_grad(set_to_none=True)
+
+        for t in range(T):
+            img_t = images[:, t]
+            dt_t = delta_ts[:, t]
+            pad_t = pad_infos[:, t]
+
+            # checkpoint pacemaker
+            img_t_safe = img_t.detach().requires_grad_(True)
+
+            with torch.autocast(device_type=device.type, dtype=amp_dtype, enabled=use_amp and device.type == "cuda"):
+                out = checkpoint.checkpoint(model, img_t_safe, dt_t, inference_state, t, use_reentrant=False)
+
+                gate_loss = None
+                if isinstance(out, (tuple, list)) and len(out) >= 6:
+                    M_fused_logits, probes_prob, F_kin, F_track, new_state, gate_loss = out[:6]
+                else:
+                    M_fused_logits, probes_prob, F_kin, F_track, new_state = out[:5]
+
+                # handoff (functional state)
+                inference_state = new_state
+
+                # print debug events if any (limit spam)
+                dbg = None
+                if isinstance(inference_state, dict) and "__debug__" in inference_state:
+                    dbg = inference_state.pop("__debug__", None)
+                if dbg is not None and step < 2 and t < 2:
+                    print(f"[DBG][train][step={step}][t={t}] {dbg}")
+
+                # logits -> 1024 -> physical
+                M_fused_1024 = F.interpolate(
+                    M_fused_logits.float(),
+                    size=(cfg.TARGET_SIZE, cfg.TARGET_SIZE),
+                    mode="bilinear",
+                    align_corners=False,
+                )
+                M_fused_phys = torch.cat(
+                    [PhysicalPreservingTransforms.reverse_logits_to_physical(M_fused_1024[b:b + 1], pad_t[b]) for b in range(B)],
+                    dim=0,
+                )
+
+                probes_1024 = F.interpolate(
+                    probes_prob.float(),
+                    size=(cfg.TARGET_SIZE, cfg.TARGET_SIZE),
+                    mode="bilinear",
+                    align_corners=False,
+                )
+                probes_phys = torch.cat(
+                    [PhysicalPreservingTransforms.reverse_logits_to_physical(probes_1024[b:b + 1], pad_t[b]) for b in range(B)],
+                    dim=0,
+                )
+
+                Pc_gt = batch["P_c"][:, t].to(device)
+                Pt_gt = batch["P_t"][:, t].to(device)
+                Ph_gt = batch["P_h"][:, t].to(device)
+
+                loss_t, loss_dict = criterion(
+                    M_fused_phys, masks_gt[:, t], W_SDF[:, t],
+                    probes_phys, Pc_gt, Pt_gt, Ph_gt,
+                    F_track, F_track_prev, F_kin,
+                )
+
+                if gate_loss is not None and torch.is_tensor(gate_loss):
+                    loss_t = loss_t + gate_loss
+                    loss_dict = dict(loss_dict)
+                    loss_dict["KeyframeGate"] = float(gate_loss.detach().item())
+
+                total_loss = loss_t if total_loss is None else (total_loss + loss_t)
+                last_loss_dict = loss_dict
+
+            # TBPTT: keep prev track as constant
+            F_track_prev = F_track.detach()
+
+        total_loss = total_loss / max(1, T)
+        scaler.scale(total_loss).backward()
+
+        scaler.unscale_(optimizer)
+        torch.nn.utils.clip_grad_norm_(filter(lambda p: p.requires_grad, model.parameters()), max_norm=1.0)
+
+        scaler.step(optimizer)
+        scaler.update()
+
+        epoch_loss += float(total_loss.detach().item())
+
+        # accumulate component losses (averaged over time) for CSV logging
+        if last_loss_dict is not None:
+            comp_sum['Total'] += float(last_loss_dict.get('Total', float(total_loss.detach().item())))
+            comp_sum['Seg_Exempt'] += float(last_loss_dict.get('Seg_Exempt', 0.0))
+            comp_sum['Probe'] += float(last_loss_dict.get('Probe', 0.0))
+            comp_sum['Kinematic'] += float(last_loss_dict.get('Kinematic', 0.0))
+            comp_sum['Presence'] += float(last_loss_dict.get('Presence', 0.0))
+            comp_sum['KeyframeGate'] += float(last_loss_dict.get('KeyframeGate', 0.0))
+            comp_count += 1
+
+
+        if step % 5 == 0 and last_loss_dict is not None:
+            msg = (
+                f"Batch [{step}/{len(dataloader)}] | "
+                f"Tot: {last_loss_dict.get('Total', 0.0):.4f} | "
+                f"Seg: {last_loss_dict.get('Seg_Exempt', 0.0):.4f} | "
+                f"Probe: {last_loss_dict.get('Probe', 0.0):.4f} | "
+                f"Kin: {last_loss_dict.get('Kinematic', 0.0):.4f} | "
+                f"Pres: {last_loss_dict.get('Presence', 0.0):.4f}"
+            )
+            if "KeyframeGate" in last_loss_dict:
+                msg += f" | Gate: {last_loss_dict.get('KeyframeGate', 0.0):.4f}"
+            print(msg)
+
+    # Return both scalar + detailed losses for logging
+    denom = max(1, comp_count)
+    out = {
+        'loss_total': epoch_loss / max(1, len(dataloader)),
+        'loss_seg': comp_sum['Seg_Exempt'] / denom,
+        'loss_probe': comp_sum['Probe'] / denom,
+        'loss_kin': comp_sum['Kinematic'] / denom,
+        'loss_pres': comp_sum['Presence'] / denom,
+        'loss_gate': comp_sum['KeyframeGate'] / denom,
+    }
+    return out
+
+
+@torch.no_grad()
+def evaluate_epoch(model, dataloader, device, cfg, output_viz_dir=None, report_dir=None):
+    """Validation/Test evaluation.
+
+    Fixes:
+    - Ensure amp_dtype is always defined.
+    - Ensure M_fused_logits is always assigned (even if model call fails) -> no UnboundLocalError.
+    - Compatible with 5/6 outputs.
+    """
+    model.eval()
+
+    if report_dir is None:
+        report_dir = getattr(cfg, "REPORT_DIR", None)
+
+    try:
+        tracker = BeyondGT_MetricsTracker(relaxation_delta=getattr(cfg, "RELAXATION_DELTA", 5))
+    except TypeError:
+        tracker = BeyondGT_MetricsTracker()
+
+    use_amp = bool(getattr(cfg, "AMP", True))
+    amp_dtype = _get_amp_dtype(device)
+    rootness_thr = float(getattr(cfg, "ROOTNESS_THR", 0.5))
+
+    per_frame_rows = []
+    seq_rows = []
+
+    def _bin_dt(dt):
+        if dt <= 30: return "<=30"
+        if dt <= 90: return "30-90"
+        return ">90"
+
+    def _bin_seq_len(L):
+        if L <= 1: return "1"
+        if L <= 3: return "2-3"
+        if L <= 6: return "4-6"
+        return ">=7"
+
+    def _get_meta(metas_obj, t_idx: int, b_idx: int) -> dict:
+        if metas_obj is None:
+            return {}
+        try:
+            mt = metas_obj[t_idx]
+        except Exception:
+            return {}
+        if isinstance(mt, list):
+            return mt[b_idx] if b_idx < len(mt) else {}
+        if isinstance(mt, dict):
+            out = {}
+            for k, v in mt.items():
+                try:
+                    out[k] = v[b_idx]
+                except Exception:
+                    out[k] = v
+            return out
+        return {}
+
+    for batch_idx, batch in enumerate(dataloader):
+        images = batch["images"].to(device)
+        masks_gt = batch["masks_gt"].cpu().numpy()
+        dt_ts = batch["delta_t"].to(device)
+        pad_infos = batch["pad_info"].to(device)
+        metas = batch.get("meta", None)
+
+        B, T = images.shape[:2]
+
+        inference_state = {
+            "output_dict": {}, "obj_ptr_tks": {}, "time_dict": {}, "value_dict": {},
+            "prompted_output_dict": {}, "prompted_obj_ptr_tks": {}, "prompted_time_dict": {}, "prompted_value_dict": {},
+            "time_days": torch.zeros(B, dtype=torch.float32, device=device),
+            "prev_present": torch.zeros(B, dtype=torch.float32, device=device),
+            "is_mem_empty": torch.ones(B, dtype=torch.bool, device=device),
+        }
+
+        fp_prev = [None] * B
+        tepr_soil_vals = [[] for _ in range(B)]
+        flush_count = [0] * B
+
+        for t in range(T):
+            img_t = images[:, t]
+            dt_t = dt_ts[:, t]
+            pad_t = pad_infos[:, t]
+
+            # ✅ ensure var exists no matter what
+            M_fused_logits = None
+
+            try:
+                with torch.autocast(device_type=device.type, dtype=amp_dtype, enabled=use_amp and device.type == "cuda"):
+                    out = model(img_t, dt_t, inference_state, t)
+                    if isinstance(out, (tuple, list)) and len(out) >= 6:
+                        M_fused_logits, _, _, _, new_state = out[:5]
+                    else:
+                        M_fused_logits, _, _, _, new_state = out[:5]
+                inference_state = new_state
+
+                dbg = None
+                if isinstance(inference_state, dict) and "__debug__" in inference_state:
+                    dbg = inference_state.pop("__debug__", None)
+                if dbg is not None and batch_idx == 0 and t < 2:
+                    print(f"[DBG][val][t={t}] {dbg}")
+
+            except Exception as e:
+                # hard safety: skip this frame, do not crash val loop
+                if batch_idx == 0 and t < 2:
+                    print(f"[WARN][val] model forward failed at t={t}: {e}")
+                continue
+
+            if M_fused_logits is None:
+                continue
+
+            M_fused_1024 = F.interpolate(
+                M_fused_logits.float(),
+                size=(cfg.TARGET_SIZE, cfg.TARGET_SIZE),
+                mode="bilinear",
+                align_corners=False,
+            )
+
+            for b in range(B):
+                M_phys = PhysicalPreservingTransforms.reverse_logits_to_physical(M_fused_1024[b:b + 1], pad_t[b])
+                pred_prob = torch.sigmoid(M_phys).cpu().numpy()[0, 0]
+                pred_mask = (pred_prob > rootness_thr).astype(np.bool_)
+                gt_mask = (masks_gt[b, t, 0] > 0.5).astype(np.bool_)
+                dt_val = float(dt_t[b].detach().cpu().numpy())
+
+                tracker.update(pred_prob, gt_mask.astype(np.float32), dt_val)
+
+                fm = compute_frame_metrics(pred_mask, gt_mask, relaxation_delta=getattr(cfg, "RELAXATION_DELTA", 5))
+                total_pixels = int(gt_mask.size)
+
+                flush_flag = False
+                if isinstance(inference_state, dict) and ("is_mem_empty" in inference_state) and inference_state["is_mem_empty"] is not None:
+                    try:
+                        flush_flag = bool(inference_state["is_mem_empty"][b].detach().cpu().item())
+                    except Exception:
+                        flush_flag = False
+                flush_count[b] += int(flush_flag)
+
+                tepr_delta_fp_pct = ""
+                if fp_prev[b] is not None:
+                    d_fp = max(0.0, float(fm["fp"]) - float(fp_prev[b]))
+                    tepr_delta_fp_pct = 100.0 * d_fp / max(1, total_pixels)
+                    if fm["gt_pixels"] == 0:
+                        tepr_soil_vals[b].append(float(tepr_delta_fp_pct))
+                fp_prev[b] = float(fm["fp"])
+
+                meta_bt = _get_meta(metas, t, b)
+                seq_len = int(meta_bt.get("seq_len", T))
+                flips = int(meta_bt.get("flips", 0))
+                mixed = bool(meta_bt.get("mixed", flips >= 1))
+
+                per_frame_rows.append({
+                    "subset": meta_bt.get("subset", ""),
+                    "split": meta_bt.get("split", ""),
+                    "seq_id": meta_bt.get("seq_id", ""),
+                    "seq_len": seq_len,
+                    "seq_len_bin": _bin_seq_len(seq_len),
+                    "flips": flips,
+                    "mixed": mixed,
+                    "frame_idx": int(meta_bt.get("frame_idx", t)),
+                    "delta_t": dt_val,
+                    "dt_bin": _bin_dt(dt_val),
+                    "has_root": int(meta_bt.get("has_root", int(fm["gt_pixels"] > 0))),
+                    "flush": int(flush_flag),
+                    "image_name": meta_bt.get("image_name", ""),
+                    "timestamp": meta_bt.get("timestamp", ""),
+                    "total_pixels": total_pixels,
+                    "tp": int(fm["tp"]),
+                    "fp": int(fm["fp"]),
+                    "fn": int(fm["fn"]),
+                    "tn": int(fm["tn"]),
+                    "pred_pixels": int(fm["pred_pixels"]),
+                    "gt_pixels": int(fm["gt_pixels"]),
+                    "iou": float(fm["iou"]),
+                    "dice": float(fm["dice"]),
+                    "precision": float(fm["precision"]),
+                    "recall": float(fm["recall"]),
+                    "cldice": float(fm["cldice"]),
+                    "sdf_relaxed_iou": float(fm["sdf_relaxed_iou"]),
+                    "tepr_delta_fp_pct": tepr_delta_fp_pct,
+                })
+
+        # sequence summary
+        for b in range(B):
+            meta0 = _get_meta(metas, 0, b)
+            seq_id = meta0.get("seq_id", f"seq_{batch_idx}_{b}")
+            seq_rows.append({
+                "subset": meta0.get("subset", ""),
+                "split": meta0.get("split", ""),
+                "seq_id": seq_id,
+                "seq_len": int(meta0.get("seq_len", T)),
+                "flips": int(meta0.get("flips", 0)),
+                "mixed": bool(meta0.get("mixed", False)),
+                "flush_count": int(flush_count[b]),
+                "tepr_soil_mean": float(np.mean(tepr_soil_vals[b])) if len(tepr_soil_vals[b]) > 0 else "",
+                "tepr_soil_max": float(np.max(tepr_soil_vals[b])) if len(tepr_soil_vals[b]) > 0 else "",
+            })
+
+    res = tracker.summarize() if hasattr(tracker, "summarize") else (tracker.compute_summary() if hasattr(tracker, "compute_summary") else {})
+
+    # write reports
+    if report_dir is not None:
+        os.makedirs(report_dir, exist_ok=True)
+        per_frame_path = os.path.join(report_dir, "per_frame_metrics.csv")
+        seq_path = os.path.join(report_dir, "sequence_summary.csv")
+
+        if len(per_frame_rows) > 0:
+            fieldnames = list(per_frame_rows[0].keys())
+            with open(per_frame_path, "w", newline="") as f:
+                w = csv.DictWriter(f, fieldnames=fieldnames)
+                w.writeheader()
+                for r in per_frame_rows:
+                    w.writerow(r)
+
+        if len(seq_rows) > 0:
+            fieldnames = list(seq_rows[0].keys())
+            with open(seq_path, "w", newline="") as f:
+                w = csv.DictWriter(f, fieldnames=fieldnames)
+                w.writeheader()
+                for r in seq_rows:
+                    w.writerow(r)
+
+        try:
+            from tools.stratified_report import build_stratified_report
+            build_stratified_report(per_frame_path, report_dir)
+        except Exception as e:
+            print(f"⚠️ Stratified report generation skipped due to error: {e}")
+
+    return res

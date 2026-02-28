@@ -1,0 +1,333 @@
+import math
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+
+
+# =========================================================
+# Dual-ascent helper (Lagrangian multipliers)
+# =========================================================
+class _GradReverse(torch.autograd.Function):
+    @staticmethod
+    def forward(ctx, x):
+        return x.view_as(x)
+
+    @staticmethod
+    def backward(ctx, grad_output):
+        return -grad_output
+
+
+def grad_reverse(x: torch.Tensor) -> torch.Tensor:
+    return _GradReverse.apply(x)
+
+
+class TACEOptimizationField(nn.Module):
+    """RootSAM-Pro 大一统物理寻优场 (TACE)
+
+    说明：
+      - 保持旧版 forward 签名兼容（trainer 仍可传 Pt_gt，但内部不再使用 Pt_gt）
+      - AMP-safe：所有概率 BCE 都在 fp32 + clamp 下计算，避免混合精度 NaN/Inf
+      - FULL 模式启用 Pure-Soil FP 的可微对偶约束（dual Lagrangian），避免后期 FPR 漂移
+    """
+
+    def __init__(self, cfg):
+        super().__init__()
+        self.cfg = cfg
+        self.mode = cfg.ABLATION_MODE
+
+        # legacy fixed weights (fallback if uncertainty is disabled)
+        self.l_seg = float(getattr(cfg, "L_SEG", 1.0))
+        self.l_topo = float(getattr(cfg, "L_TOPO", 0.25))  # used only if USE_TASK_UNCERTAINTY=False
+        self.l_probe = float(getattr(cfg, "L_PROBE", 0.5))
+        self.l_kin = float(getattr(cfg, "L_KIN", 0.1))
+        self.l_presence = float(getattr(cfg, "L_PRESENCE", 0.2))
+
+        # homoscedastic task-uncertainty weighting
+        self.use_task_uncertainty = bool(getattr(cfg, "USE_TASK_UNCERTAINTY", True))
+        # order: seg / probe / kin / presence
+                # order: seg_area / seg_topo / probe / kin / presence
+        self.log_vars = nn.Parameter(torch.zeros(5, dtype=torch.float32))
+
+        # focal params
+        self.alpha = float(getattr(cfg, "ALPHA_FOCAL", 0.85))
+        self.gamma = float(getattr(cfg, "GAMMA_FOCAL", 2.0))
+        self.eps = 1e-6
+
+        # =========================================================
+        # Topology consistency (Soft-skeleton clDice)
+        # - Default ON only in FULL mode (keeps Table 4.1 orthogonality)
+        # - Uses differentiable soft-skeletonization; no hand-tuned weight (auto via log_vars)
+        # =========================================================
+        self.use_topology = bool(getattr(cfg, "USE_TOPOLOGY_LOSS", self.mode == "FULL"))
+        self.topo_skel_iter = int(getattr(cfg, "TOPO_SKEL_ITER", 10))
+
+        # =========================================================
+        # HPACS Pure-Soil FP constraint (Dual Lagrangian)
+        # - Activated ONLY in FULL mode to preserve Table 4.1 orthogonality
+        # - Learnable multiplier via grad-reversal (dual ascent)
+        # =========================================================
+        self.soil_lambda_raw = nn.Parameter(torch.tensor(-4.0, dtype=torch.float32))
+
+    # -------------------------
+    # helpers
+    # -------------------------
+    def _ensure_1ch(self, x):
+        """防御性通道对齐：确保 (B,1,H,W)"""
+        if x is None:
+            return None
+        if x.dim() == 3:
+            x = x.unsqueeze(1)
+        if x.dim() == 4 and x.size(1) != 1:
+            x = x[:, 0:1]
+        return x
+
+    def _bce_prob_fp32(self, pred_prob, target):
+        """✅ AMP-safe BCE: 强制 fp32 + clamp 防 NaN"""
+        pred = pred_prob.float().clamp(1e-4, 1.0 - 1e-4)
+        tgt = target.float()
+        return F.binary_cross_entropy(pred, tgt)
+
+    def _generate_gpu_sdf_weight(self, M_gt):
+        """兜底的 GPU 近似豁免场（防 W_SDF 为 None）"""
+        if M_gt.sum() == 0:
+            return torch.ones_like(M_gt)
+        dilated = F.max_pool2d(M_gt, kernel_size=3, stride=1, padding=1)
+        eroded = -F.max_pool2d(-M_gt, kernel_size=3, stride=1, padding=1)
+        field = (dilated - eroded).clamp(0, 1)
+        for _ in range(3):
+            field = F.avg_pool2d(field, kernel_size=5, stride=1, padding=2)
+        field = field / (field.amax(dim=(1, 2, 3), keepdim=True) + 1e-8)
+        return (1.0 - field).detach().clamp(0.0, 1.0)
+
+
+    def _soft_erode(self, img: torch.Tensor) -> torch.Tensor:
+        # min-pool via negated max-pool (AMP-safe)
+        return -F.max_pool2d(-img, kernel_size=3, stride=1, padding=1)
+
+    def _soft_dilate(self, img: torch.Tensor) -> torch.Tensor:
+        return F.max_pool2d(img, kernel_size=3, stride=1, padding=1)
+
+    def _soft_open(self, img: torch.Tensor) -> torch.Tensor:
+        return self._soft_dilate(self._soft_erode(img))
+
+    def _soft_skeletonize(self, img: torch.Tensor, iters: int) -> torch.Tensor:
+        """Differentiable soft-skeletonization (clDice-style).
+        img is assumed in [0,1]. Returns a soft skeleton in [0,1].
+        """
+        img = img.clamp(0.0, 1.0)
+        skel = torch.zeros_like(img)
+        curr = img
+        for _ in range(int(iters)):
+            opened = self._soft_open(curr)
+            delta = F.relu(curr - opened)
+            # avoid double counting already captured skeleton mass
+            skel = skel + F.relu(delta - skel * delta)
+            curr = self._soft_erode(curr)
+        return skel.clamp(0.0, 1.0)
+
+    def _cldice_loss(self, pred_prob: torch.Tensor, gt_prob: torch.Tensor, Pc_gt: torch.Tensor | None) -> torch.Tensor:
+        """Compute soft-clDice loss.
+        pred_prob, gt_prob: (B,1,H,W) in [0,1]. Pc_gt optionally provides GT skeleton prior.
+        Returns scalar loss (mean over valid non-empty GT in batch).
+        """
+        B = int(pred_prob.shape[0])
+        eps = 1e-6
+
+        skel_pred = self._soft_skeletonize(pred_prob, self.topo_skel_iter)
+
+        if Pc_gt is not None:
+            skel_gt = Pc_gt.float().clamp(0.0, 1.0)
+        else:
+            skel_gt = self._soft_skeletonize(gt_prob, self.topo_skel_iter)
+
+        # clDice components
+        tprec = (skel_pred * gt_prob).flatten(1).sum(dim=1) / (skel_pred.flatten(1).sum(dim=1) + eps)
+        tsens = (skel_gt * pred_prob).flatten(1).sum(dim=1) / (skel_gt.flatten(1).sum(dim=1) + eps)
+
+        cldice = (2.0 * tprec * tsens) / (tprec + tsens + eps)  # (B,)
+        loss = 1.0 - cldice
+
+        # ignore pure-soil frames (gt empty): topology undefined / meaningless
+        gt_sum = gt_prob.flatten(1).sum(dim=1)
+        valid = (gt_sum > 0).float()
+        return (loss * valid).sum() / (valid.sum() + eps)
+
+    # -------------------------
+    # forward
+    # -------------------------
+    # 🚨 trainer 仍可能传 Pt_gt，但内部不再使用
+    def forward(self, M_pred_logits, M_gt, W_SDF_in, probes_prob, Pc_gt, Pt_gt, Ph_gt, F_t, F_prev, F_kin):
+        device = M_pred_logits.device
+        B = int(M_pred_logits.shape[0])
+
+        # channel align
+        M_gt = self._ensure_1ch(M_gt).to(device=device, dtype=M_pred_logits.dtype)
+        W_SDF = None
+        if W_SDF_in is not None:
+            W_SDF = self._ensure_1ch(W_SDF_in).to(device=device, dtype=M_pred_logits.dtype)
+        Pc_gt = self._ensure_1ch(Pc_gt).to(device=device, dtype=M_pred_logits.dtype) if Pc_gt is not None else None
+        Ph_gt = self._ensure_1ch(Ph_gt).to(device=device, dtype=M_pred_logits.dtype) if Ph_gt is not None else None
+
+        pred_sig = torch.sigmoid(M_pred_logits)
+
+        # FULL: use SDF exemption; but for pure-soil frames, remove exemption (W_SDF=1) and use alpha=1
+        if self.mode == "FULL":
+            W_SDF = W_SDF if W_SDF is not None else self._generate_gpu_sdf_weight(M_gt)
+            gt_sum_per_batch = M_gt.view(B, -1).sum(dim=1, keepdim=True).view(B, 1, 1, 1)
+            is_pure_soil = (gt_sum_per_batch == 0).float()  # (B,1,1,1)
+            W_SDF = torch.where(is_pure_soil > 0, torch.ones_like(W_SDF), W_SDF)
+            alpha_t = torch.where(
+                is_pure_soil > 0,
+                torch.tensor(1.0, device=device, dtype=M_pred_logits.dtype),
+                torch.where(M_gt == 1.0, torch.tensor(self.alpha, device=device, dtype=M_pred_logits.dtype),
+                            torch.tensor(1.0 - self.alpha, device=device, dtype=M_pred_logits.dtype))
+            )
+        else:
+            is_pure_soil = (M_gt.view(B, -1).sum(dim=1, keepdim=True).view(B, 1, 1, 1) == 0).float()
+            W_SDF = torch.ones_like(M_gt)
+            alpha_t = torch.where(
+                M_gt == 1.0,
+                torch.tensor(self.alpha, device=device, dtype=M_pred_logits.dtype),
+                torch.tensor(1.0 - self.alpha, device=device, dtype=M_pred_logits.dtype)
+            )
+
+        # -------------------------
+        # 1) Seg Loss (Focal + Dice with SDF relaxation)
+        # -------------------------
+        bce_logits = F.binary_cross_entropy_with_logits(M_pred_logits, M_gt, reduction="none")
+        focal_seg_raw = alpha_t * (1.0 - torch.exp(-bce_logits)) ** self.gamma * bce_logits
+
+        safe_denom = torch.clamp(torch.sum(W_SDF, dim=(1, 2, 3)), min=1.0)  # stabilize: avoid 1% HW floor exploding loss
+        exempt_focal = torch.sum(focal_seg_raw * W_SDF, dim=(1, 2, 3)) / safe_denom
+        exempt_dice = 1.0 - (2.0 * torch.sum(pred_sig * M_gt * W_SDF, dim=(1, 2, 3)) + 1.0) / (
+            torch.sum((pred_sig + M_gt) * W_SDF, dim=(1, 2, 3)) + 1.0
+        )
+        loss_seg = (exempt_focal + exempt_dice).mean()
+        # safety cap (prevents rare spikes from dominating TBPTT)
+        cap = float(getattr(self.cfg, "SEG_LOSS_CAP", 50.0))
+        if cap > 0:
+            loss_seg = torch.clamp(loss_seg, max=cap)
+
+        # -------------------------
+        # 1.5) Topology Loss (Soft-clDice)  [FULL only by default]
+        # -------------------------
+        loss_topo = torch.zeros((), device=device, dtype=torch.float32)
+        if self.use_topology and (self.mode == "FULL"):
+            # Use pred_prob and GT; Pc_gt acts as a GT skeleton prior if provided by dataset
+            pred_prob_topo = pred_sig
+            gt_prob_topo = M_gt.float()
+            Pc_prior = Pc_gt.float() if Pc_gt is not None else None
+            # Ensure same resolution
+            if pred_prob_topo.shape[-2:] != gt_prob_topo.shape[-2:]:
+                pred_prob_topo = F.interpolate(pred_prob_topo, size=gt_prob_topo.shape[-2:], mode="bilinear", align_corners=False)
+            if Pc_prior is not None and Pc_prior.shape[-2:] != gt_prob_topo.shape[-2:]:
+                Pc_prior = F.interpolate(Pc_prior, size=gt_prob_topo.shape[-2:], mode="bilinear", align_corners=False)
+            loss_topo = self._cldice_loss(pred_prob_topo.float(), gt_prob_topo.float(), Pc_prior)
+
+        # -------------------------
+        # 2) Probe / Presence / Kinematic
+        # -------------------------
+        loss_probe = torch.zeros((), device=device, dtype=torch.float32)
+        loss_presence = torch.zeros((), device=device, dtype=torch.float32)
+        loss_kin = torch.zeros((), device=device, dtype=torch.float32)
+
+        if self.mode not in ["ZERO_SHOT", "VANILLA", "SRD_ONLY"] and probes_prob is not None:
+            probes_safe = torch.clamp(probes_prob, min=self.eps, max=1.0 - self.eps)
+            Pc_pred = probes_safe[:, 0:1]
+            Ph_pred = probes_safe[:, 2:3] if probes_safe.shape[1] > 2 else probes_safe[:, 1:2]
+
+            if Pc_gt is not None and Pc_pred.shape[-2:] != Pc_gt.shape[-2:]:
+                Pc_pred = F.interpolate(Pc_pred, size=Pc_gt.shape[-2:], mode="bilinear", align_corners=False)
+            if Ph_gt is not None and Ph_pred.shape[-2:] != Ph_gt.shape[-2:]:
+                Ph_pred = F.interpolate(Ph_pred, size=Ph_gt.shape[-2:], mode="bilinear", align_corners=False)
+
+            present_gt = (M_gt.view(B, -1).sum(dim=1, keepdim=True).view(B, 1, 1, 1) > 0).float()
+            present_pred = Pc_pred.flatten(2).amax(dim=-1, keepdim=True).view(B, 1, 1, 1).clamp(self.eps, 1.0 - self.eps)
+
+            dev_type = "cuda" if device.type == "cuda" else "cpu"
+            with torch.autocast(device_type=dev_type, enabled=False):
+                loss_pc = self._bce_prob_fp32(Pc_pred, Pc_gt) if Pc_gt is not None else torch.zeros((), device=device)
+                loss_ph = self._bce_prob_fp32(Ph_pred, Ph_gt) if Ph_gt is not None else torch.zeros((), device=device)
+                loss_probe = (loss_pc + 2.0 * loss_ph).float()
+                loss_presence = self._bce_prob_fp32(present_pred, present_gt).float()
+
+            if (F_prev is not None) and (F_t is not None) and (F_t.shape == F_prev.shape):
+                with torch.autocast(device_type=dev_type, enabled=False):
+                    sim = F.cosine_similarity(F_t.float(), F_prev.detach().float(), dim=1).unsqueeze(1)
+                    f_kin_val = F_kin.detach().float() if F_kin is not None else torch.ones_like(sim)
+                    loss_kin = (torch.sum(f_kin_val * (1.0 - sim)) / torch.clamp(torch.sum(f_kin_val), min=1.0)).float()
+
+        # -------------------------
+        # 3) Total loss (uncertainty weighted OR legacy weighted)
+        # -------------------------
+        if self.use_task_uncertainty:
+            raw = [loss_seg, loss_topo, loss_probe, loss_kin, loss_presence]
+            active = [
+                True,  # seg_area always on
+                bool(self.use_topology and (self.mode == "FULL")),  # seg_topo
+                (self.mode not in ["ZERO_SHOT", "VANILLA", "SRD_ONLY"]) and (probes_prob is not None),  # probe
+                (self.mode not in ["ZERO_SHOT", "VANILLA", "SRD_ONLY"]) and (probes_prob is not None) and (F_prev is not None) and (F_t is not None) and (F_t.shape == F_prev.shape),  # kin
+                (self.mode not in ["ZERO_SHOT", "VANILLA", "SRD_ONLY"]) and (probes_prob is not None),  # presence
+            ]
+            cl = float(getattr(self.cfg, "UNCERTAINTY_LOGVAR_CLAMP", 5.0))
+            s = self.log_vars.clamp(-cl, cl)
+            total_loss = torch.zeros((), device=device, dtype=torch.float32)
+            for i, (L_i, on) in enumerate(zip(raw, active)):
+                if not on:
+                    continue
+                precision = torch.exp(-s[i])
+                total_loss = total_loss + precision * L_i.float() + 0.5 * s[i]
+        else:
+            total_loss = (
+                self.l_seg * loss_seg.float()
+                + self.l_topo * loss_topo.float()
+                + self.l_probe * loss_probe.float()
+                + self.l_kin * loss_kin.float()
+                + self.l_presence * loss_presence.float()
+            )
+        # -------------------------
+        # 4) HPACS Pure-Soil FP Dual Constraint (FULL only)
+        #    🚀 Top-K Hard Negative Mining (avoid spatial dilution on large H×W)
+        # -------------------------
+        L_soil = torch.zeros((), device=device, dtype=torch.float32)
+        lam_soil = F.softplus(grad_reverse(self.soil_lambda_raw)).clamp(0.0, 10.0)
+
+        if self.mode == "FULL":
+            soil_mask = is_pure_soil.view(B).float()
+            if soil_mask.sum() > 0:
+                # Select only pure-soil frames in the batch
+                idx = torch.nonzero(soil_mask > 0, as_tuple=False).view(-1)
+                pure_soil_logits = M_pred_logits.index_select(dim=0, index=idx)  # (N,1,H,W)
+
+                # Flatten to (N, H*W) in fp32 for numerical stability
+                logits_flat = pure_soil_logits.float().flatten(1)
+
+                # Dynamic Top-1% assassin (with safety minimum; clamp by total pixels)
+                topk_ratio = 0.01
+                k_min = 1000
+                hw = int(logits_flat.shape[1])
+                K = max(k_min, int(hw * topk_ratio))
+                K = min(K, hw)
+
+                # Focus penalty on the most confident false positives (largest logits)
+                topk_logits, _ = torch.topk(logits_flat, k=K, dim=1, largest=True, sorted=False)
+
+                # Probability on Top-K only (no global mean dilution)
+                L_soil = torch.sigmoid(topk_logits).mean()
+
+                # Dual Lagrangian: multiplier learns itself via grad-reversal (dual ascent)
+                total_loss = total_loss + lam_soil * L_soil
+
+        # return (loss, dict) for trainer
+        metrics = {
+            "Total": float(total_loss.detach().item()),
+            "Seg_Exempt": float(loss_seg.detach().item()),
+            "Topo_clDice": float(loss_topo.detach().item()) if torch.is_tensor(loss_topo) else float(loss_topo),
+            "Probe": float(loss_probe.detach().item()) if torch.is_tensor(loss_probe) else float(loss_probe),
+            "Kinematic": float(loss_kin.detach().item()) if torch.is_tensor(loss_kin) else float(loss_kin),
+            "Presence": float(loss_presence.detach().item()) if torch.is_tensor(loss_presence) else float(loss_presence),
+            "SoilFP": float(L_soil.detach().item()) if torch.is_tensor(L_soil) else float(L_soil),
+            "SoilLambda": float(lam_soil.detach().item()) if torch.is_tensor(lam_soil) else float(lam_soil),
+            "SoilTopK": int(K) if (self.mode == "FULL" and soil_mask.sum() > 0) else 0,
+        }
+        return total_loss, metrics

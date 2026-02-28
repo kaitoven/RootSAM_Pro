@@ -1,0 +1,279 @@
+import os
+import torch
+
+
+class Config:
+    """
+    RootSAM-Pro 全局超参数配置中枢（v2.1 - HPACS Strict + Unit-Safe Thresholds）
+
+    设计原则：
+      1) 与 SAM2.1-Hiera-L (d_model=256, kv_in_dim=64, memory_out_dim=64) 对齐
+      2) 训练/验证/测试严格隔离
+      3) 可复现：统一保存/选择最优模型（HPACS）
+      4) 完全去除 Val 扫参/校准流程（Zero-Heuristic）
+
+    ⚠️ 重要：HPACS Gate 的阈值单位在本文件中被统一为“百分比(0~100)”，
+    避免 main.py 中出现 0.10 vs 10.0 的歧义。
+    """
+
+    # =========================================================
+    # 0) Repro / Device
+    # =========================================================
+    SEED = 42
+    DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
+
+    # 数据集根目录（请根据实际环境修改）- 绝对路径更安全，避免因工作目录不同导致的路径问题。
+    ROOT_DIR = "/root/autodl-tmp/data/PRMI/"
+
+    # 默认子集（可由 main.py --subset 覆盖）
+    SUBSET_NAME = "Cotton_736x552_DPI150"
+
+    # =========================================================
+    # 1) SAM2.1 Backbone
+    # =========================================================
+    SAM2_MODEL_CFG = "configs/sam2.1/sam2.1_hiera_l.yaml"
+    SAM2_CHECKPOINT = "./checkpoints/sam2.1_hiera_large.pt"
+
+    # =========================================================
+    # 2) Input / Tiling / Memory
+    # =========================================================
+    TARGET_SIZE = 1024
+    SEQ_LENGTH = 2
+
+    # =========================================================
+    # 2.1) Training sequence mode (PRMI time-lapse utilization)
+    # =========================================================
+    # CLIP: fixed-length sliding snippets (fast, short-term memory)
+    # SEQUENCE: full causal sequence rollout per sample (uses true seq_len; enables long-term memory)
+    TRAIN_MODE = "CLIP"   # "CLIP" or "SEQUENCE"
+    # If >0 and TRAIN_MODE=="SEQUENCE": cap very long sequences by generating causal windows of this length.
+    # Set 0 to use full sequences as-is.
+    TRAIN_MAX_SEQ_LEN = 0
+    # TBPTT chunk length in frames when TRAIN_MODE=="SEQUENCE" (0 -> do one optimizer step per sequence).
+    TBPTT_CHUNK = 4
+
+
+    # Memory bank / TBPTT
+    MAX_MEM_FRAMES = 4                 # 总体上限 (dual-bank + TBPTT)
+    TBPTT_KEEP_LAST = 1                 # 截断反传：保留最近 N 帧的梯度（dual-bank）
+    MAX_RECENT_FRAMES = 4               # recent bank 上限（dual-bank）
+    MAX_PROMPTED_FRAMES = 1             # prompted bank 上限（dual-bank）
+    MEM_POOL_STRIDE = 1                 # spatial tokens 下采样（>1 可降显存/提速）
+    USE_TEMPORAL_POS = True
+
+    # Spatial 2D positional encoding for SAM2 memory attention (query dim).
+    # Strongly recommended for thin-root tracking to prevent drift/mismatch.
+    USE_SPATIAL_POS = True
+
+    # Bio-KES
+    USE_BIO_KES = True
+
+
+    SOIL_LSE_TAU = 0.20
+    SOIL_DUAL_LR_MULT = 10.0
+
+    # =========================================================
+    # 3) Training hyperparams
+    # =========================================================
+    BATCH_SIZE = 4
+
+    # Eval/Test batch size. Can be >1 safely with GroupBySeqLenBatchSampler.
+    EVAL_BATCH_SIZE = 1
+
+    # Safety: assert each sample contains only one seq_id across frames.
+    ASSERT_SEQ_COHERENCE = True
+    NUM_WORKERS = 8
+
+    # DataLoader / H2D transfer
+    # PIN_MEMORY=True + non_blocking=True can noticeably improve throughput on GPU training.
+    # Keep them configurable for different cloud nodes.
+    PIN_MEMORY = True
+    NON_BLOCKING = True
+
+    # DataLoader throughput knobs (safe defaults for multi-GPU / multi-run).
+    # Only active when NUM_WORKERS>0.
+    PERSISTENT_WORKERS = True
+    PREFETCH_FACTOR = 4
+
+    EPOCHS = 30
+    LR = 1e-4
+    MIN_LR = 5e-6
+    WEIGHT_DECAY = 1e-3
+
+    # AMP
+    AMP = True
+    AMP_DTYPE = "bf16"   # "bf16" or "fp16"
+
+    # =========================================================
+    # 4) Loss weights & Physics
+    # =========================================================
+    # Homoscedastic task-uncertainty auto-weighting
+    USE_TASK_UNCERTAINTY = True
+    # cap for log_vars in task-uncertainty weighting (prevents huge exp gains)
+    UNCERTAINTY_LOGVAR_CLAMP = 2.0
+
+    # Focal loss (if used)
+    ALPHA_FOCAL = 0.85
+    GAMMA_FOCAL = 2.0
+
+    # Auxiliary supervision (thin-structure boosters)
+    # - Probe: supervise Pc/Pt/Ph (from dataset) to stabilize topology (clDice) and suppress soil FP
+    # - Presence: sequence-level root existence classification
+    # - Kinematic: feature-level temporal consistency weighted by learned F_kin
+    L_PROBE = 0.10
+    L_PRES = 0.05
+    L_KIN = 0.02
+    PROBE_W = (1.0, 1.0, 0.5)
+
+    # SDF Relaxation (metrics/loss)
+    RELAXATION_DELTA = 5
+
+    # =========================================================
+    # 5) 假说驱动正交消融总控台
+    # =========================================================
+    ABLATION_MODE = "FULL"
+    # choices: ["ZERO_SHOT","SFA_ONLY","SFA_ASTA","FULL"]
+
+    # Tri-Adapter global toggles (paper-friendly, plug-and-play)
+    SFA_ENABLED = True
+    ASTA_ENABLED = True
+    PRA_ENABLED = True
+
+    # KMR (Kinematic Memory Refinement) — optional, but recommended for PRMI large-Δt / dynamic sequences.
+    # Enabled only in modes that use the temporal engine (SFA_ASTA / FULL) by RootSAMPro.
+    KMR_ENABLED = True
+    KMR_M = 32
+    KMR_NUM_PROTOS = 64
+
+
+    # -------------------------
+    # P0: Strict ablation discipline (orthogonal ablations)
+    # -------------------------
+    # If True, ONLY the modes in TEMPORAL_ENGINE_MODES are allowed to run the ASTA temporal engine:
+    #   - memory attention (read)
+    #   - router + gate_loss (write policy)
+    #   - memory encoder + bank write-back (write)
+    #
+    # Default discipline for your 4-mode matrix:
+    #   - SRD_ONLY:  ASTA OFF  (no router, no bank I/O)
+    #   - FULL:      ASTA ON
+    TEMPORAL_ENGINE_MODES = ["SFA_ONLY", "SFA_ASTA", "FULL"]
+
+    # -----------------------------
+    # ASTA (Adaptive Spatio-Temporal Adapter)
+    #   - Vacuum Bypass: if bank is empty, skip temporal read.
+    #   - ReZero Residual Injection: F = F_base + gamma * (F_attn - F_base), gamma init=0
+    # -----------------------------
+    ASTA_V1_ENABLED = True
+    ASTA_V1_VACUUM_BYPASS = True
+    ASTA_V1_GAMMA_INIT = 0.0
+    ABLATION_STRICT_NO_MEMORY = True
+    ABLATION_STRICT_NO_ROUTER = True
+
+    # -------------------------
+    # P2: Memory-mask gradient (TBPTT) — allow gradients through memory encoder w.r.t. masks
+    # -------------------------
+    # Only effective when temporal memory is enabled (e.g., SRD_KMR or FULL in strict mode).
+    ALLOW_MEMORY_MASK_GRAD = True
+    DETACH_PIX_FEAT_IN_MEMENC = True
+    MEMENC_MIN_WRITE_GATE = 1e-6
+
+    # =========================================================
+    # 6) HPACS Best Checkpoint Selection (Val-based)
+    # =========================================================
+    # Canonical (unit-safe, in percent 0~100)
+    FPR_MAX_FOR_BEST_PCT = 10.0          # %
+    RECALL_MIN_FOR_BEST_PCT = 10.0      # % (set 0 to disable)
+
+    CLDICE_MIN_FOR_BEST_PCT = 0.0       # % (0 disables clDice gating)
+
+    # Backward-compatible aliases (still in percent)
+    FPR_MAX_FOR_BEST = FPR_MAX_FOR_BEST_PCT
+    RECALL_MIN_FOR_BEST = RECALL_MIN_FOR_BEST_PCT
+
+
+    CLDICE_MIN_FOR_BEST = CLDICE_MIN_FOR_BEST_PCT
+    # Strict-gate mode: no warmup free-pass in any experimental results.
+    # (main.py uses strict gate; this flag is kept only for old scripts)
+    WARMUP_FREE_PASS = False
+
+    # Composite score
+    LAMBDA_SDF_IN_BEST = 0.25          # TAHS * (1 + λ*SDF)
+    BEST_TIE_EPS = 5e-4                # score tie threshold
+
+    # =========================================================
+    # 8) Debug / Logging
+    # =========================================================
+    DEBUG_DIM_TRACE = False
+    DEBUG_MAX_LINES_PER_STEP = 2
+
+    def __init__(self):
+        # Normalize legacy fields if user modified them (unit-safe).
+        self._normalize_hpacs_thresholds()
+
+    def _normalize_hpacs_thresholds(self):
+        # FPR
+        fpr = float(getattr(self, "FPR_MAX_FOR_BEST_PCT", getattr(self, "FPR_MAX_FOR_BEST", 5.0)))
+        # allow users to accidentally set fraction in (0,1]
+        if 0.0 < fpr <= 1.0:
+            fpr *= 100.0
+        self.FPR_MAX_FOR_BEST_PCT = float(fpr)
+        self.FPR_MAX_FOR_BEST = float(fpr)
+
+        # Recall
+        rec = float(getattr(self, "RECALL_MIN_FOR_BEST_PCT", getattr(self, "RECALL_MIN_FOR_BEST", 10.0)))
+        if 0.0 < rec <= 1.0:
+            rec *= 100.0
+        self.RECALL_MIN_FOR_BEST_PCT = float(rec)
+        self.RECALL_MIN_FOR_BEST = float(rec)
+
+
+        # clDice
+        cld = float(getattr(self, "CLDICE_MIN_FOR_BEST_PCT", getattr(self, "CLDICE_MIN_FOR_BEST", 0.0)))
+        if 0.0 < cld <= 1.0:
+            cld *= 100.0
+        self.CLDICE_MIN_FOR_BEST_PCT = float(cld)
+        self.CLDICE_MIN_FOR_BEST = float(cld)
+
+    def setup_dirs(self):
+        """
+        不同消融模式的输出必须物理隔离，防止权重/日志互相覆盖。
+
+        ✅ 终极可复现：默认启用 RUN_ID（时间戳+短哈希）为每次运行创建独立 RUN_DIR。
+        - 若未设置 RUN_ID，则保持向后兼容（按 subset+ablation 固定目录）。
+        """
+        # Ensure thresholds are normalized even if user changed attributes after __init__
+        self._normalize_hpacs_thresholds()
+
+        run_root = str(getattr(self, "RUN_ROOT", "runs"))
+        run_id = str(getattr(self, "RUN_ID", "")).strip()
+        if run_id:
+            self.RUN_NAME = f"{self.SUBSET_NAME}_{self.ABLATION_MODE}_{run_id}"
+            self.RUN_DIR = os.path.join(run_root, self.RUN_NAME)
+        else:
+            self.RUN_NAME = f"{self.SUBSET_NAME}_{self.ABLATION_MODE}"
+            self.RUN_DIR = os.path.join(run_root, self.RUN_NAME)
+
+        self.LOG_DIR = os.path.join(self.RUN_DIR, "logs")
+        self.VIZ_DIR = os.path.join(self.RUN_DIR, "viz")
+        self.REPORT_DIR = os.path.join(self.RUN_DIR, "report")
+        self.CKPT_DIR = os.path.join(self.RUN_DIR, "checkpoints")
+        self.BEST_CKPT_PATH = os.path.join(self.CKPT_DIR, f"rootsam_pro_{self.RUN_NAME}_best.pth")
+
+        os.makedirs(self.LOG_DIR, exist_ok=True)
+        os.makedirs(self.VIZ_DIR, exist_ok=True)
+        os.makedirs(self.REPORT_DIR, exist_ok=True)
+        os.makedirs(self.CKPT_DIR, exist_ok=True)
+    def summary(self) -> str:
+        keys = [
+            "SUBSET_NAME", "ABLATION_MODE", "TARGET_SIZE", "SEQ_LENGTH",
+            "BATCH_SIZE", "EPOCHS", "LR", "MIN_LR", "WEIGHT_DECAY",
+            "MAX_MEM_FRAMES", "TBPTT_KEEP_LAST", "MAX_RECENT_FRAMES", "MAX_PROMPTED_FRAMES",
+            "FPR_MAX_FOR_BEST_PCT", "RECALL_MIN_FOR_BEST_PCT", "LAMBDA_SDF_IN_BEST",
+        ]
+        lines = ["[Config Summary]"]
+        for k in keys:
+            lines.append(f"  - {k}: {getattr(self, k)}")
+        return "\n".join(lines)
+
+cfg = Config()

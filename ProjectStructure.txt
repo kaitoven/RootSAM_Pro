@@ -1,0 +1,287 @@
+RootSAM_Pro — Project Structure (OneShot Modular V2Final + Manifest/Version + Strict Ablation Discipline)
+
+This document describes the current code layout after the Tri-Adapter refactor:
+- RootSAMPro is an **orchestrator** around a frozen SAM2.1 backbone
+- The method is factorized into **three paper-friendly adapters**:
+    (A) SFA  : Spatial-Frequency Adapter (SRD(Image) + BHFI + HR soil washers)
+    (B) ASTA : Adaptive Spatio-Temporal Adapter (memory read/Δlogits valve/router/write)
+    (C) PRA  : Physical-Reflex Adapter (presence proxy + reflex suppression/flush; FULL only)
+- “compat” logic (SAM2 API/shape/KV-dim safety) is isolated in dedicated modules
+- Every run writes a **run manifest + version tag** for reproducibility
+- Ablation runs can be aggregated into Table 4.1 via `tools/collect_ablation_table.py`
+
+Key Ablation Discipline (strict superset chain):
+  SFA_ONLY ⊂ SFA_ASTA ⊂ FULL
+- SFA_ONLY : SRD(Image)+SFA heads trainable; ASTA=OFF; PRA=OFF
+- SFA_ASTA : SRD(Image)+SFA + ASTA trainable; PRA=OFF
+- FULL     : SRD(Image)+SFA + ASTA + PRA trainable
+Implementation guarantee: injected SRD(Image) adapters live under `sam2.*.mlp.adapter.*`,
+and are explicitly re-enabled (requires_grad=True) in SFA modes, while ASTA/PRA are frozen
+as required by the ablation mode.
+
+===============================================================================
+1) Top-level
+===============================================================================
+
+RootSAM_Pro/
+├── main.py
+│   Entry point (argparse-first). Responsibilities:
+│   - Parse CLI args (subset, ablation, resume, run_tag, run_id, --set KEY=VALUE)
+│   - Load default cfg (Config class) and apply CLI overrides (dynamic cfg overwrite)
+│   - Build datasets/dataloaders, model, loss(criterion), optimizer, scheduler
+│   - Train/Val/Test loops + checkpointing (BEST_HPACS + BEST_SCORE + LAST)
+│   - Write run artifacts (history CSV, best/test summaries, per-frame & stratified reports)
+│   - Write reproducibility artifacts (run_manifest.json, VERSION.txt, ablation CSV append)
+│   - Support SEQUENCE training (TBPTT) and SINGLE training
+│
+├── configs/
+│   └── root_sam_pro_cfg.py
+│      Default configuration (single source of truth), implemented as a Python class `Config`.
+│      Notes:
+│      - In this repo, callers often treat `Config` as a global singleton (set attributes on it).
+│      Includes:
+│      - Dataset & protocol settings (train/val/test strict separation)
+│      - Ablation switches (SFA_ONLY / SFA_ASTA / FULL; legacy aliases SRD_ONLY/SRD_KMR)
+│      - Optimizer/AMP/grad settings + LR schedule
+│      - Output/run directory naming conventions (RUN_ROOT default: "runs", override via --run_root)
+│      - HPACS checkpoint selection policy (unit-safe percentage thresholds)
+│
+├── requirements.txt
+│   Minimal Python dependencies (Torch typically provided by AutoDL CUDA image).
+│
+├── ProjectStructure.txt
+│   (this file)
+
+===============================================================================
+2) Data
+===============================================================================
+
+RootSAM_Pro/datasets/
+├── __init__.py
+└── dataset_prmi.py
+   PRMI dataset loader + time-lapse sequence sampler.
+   - Builds clips for SEQUENCE training (TBPTT_CHUNK>0) or “sequence loader” (TBPTT_CHUNK=0).
+   - Full sequences / deterministic sampling for val/test.
+   - Parses timestamps → Δt (days) and provides meta fields for sequence coherence checks.
+   - Provides masks and optional auxiliary fields (e.g., W_SDF) if enabled.
+
+===============================================================================
+3) Engine (training / evaluation)
+===============================================================================
+
+RootSAM_Pro/engine/
+├── __init__.py
+├── trainer.py
+│   Training & evaluation engine (supports SEQUENCE TBPTT + AMP + gradient checkpoint).
+│   - Calls model per-frame with (img_t, dt_t, inference_state, t).
+│   - Maintains functional inference_state across time steps (no in-place mutation).
+│   - Logs batch metrics and epoch metrics; writes CSV report artifacts.
+│   - Validation/test evaluation & CSV writing.
+│
+├── losses.py
+│   TACEOptimizationField (stable multi-field objective).
+│   - Seg loss: focal BCE with optional exemption field (W_SDF)
+│   - Topology loss: soft skeleton + soft-clDice
+│   - Optional task uncertainty weighting (USE_TASK_UNCERTAINTY)
+│   - Pure-soil Top-K dual constraint (SoilFP/SoilLambda) with optional fairness switch
+│     (SOIL_PENALTY_ALL_MODES) for strict ablation comparisons.
+│   - Safety caps (SEG_LOSS_CAP, etc.) to prevent TBPTT NaNs.
+│
+└── metrics.py
+    Per-frame metrics (IoU/F1/Precision/Recall, SDF-relaxed IoU, clDice, etc.)
+    + optional aggregations.
+
+===============================================================================
+4) Model
+===============================================================================
+
+RootSAM_Pro/models/
+├── __init__.py
+├── root_sam_pro.py
+│   RootSAMPro (orchestrator). Responsibilities:
+│   - Build & freeze SAM2.1 backbone (always eval-mode)
+│   - Apply strict ablation discipline:
+│       * SFA_ONLY: ASTA/PRA frozen & bypassed; SRD(Image) adapters explicitly un-frozen
+│       * SFA_ASTA: ASTA enabled; PRA frozen
+│       * FULL    : ASTA + PRA enabled
+│   - Encode image with SAM2.1 (SRD(Image) injection is applied inside image encoder blocks)
+│   - Mask decoding via compat layer (dummy prompts; HR washers + BHFI)
+│   - ASTA (if enabled): temporal read + one-way Δlogits valve fusion + router/write-back
+│   - PRA (FULL only): presence proxy + reflex suppression/flush
+│   - DualMemoryBank state read/write (functional, TBPTT-safe)
+│
+├── adapters/
+│   ├── __init__.py
+│   ├── adapter_utils.py
+│   │   Adapter wrappers / safety utilities:
+│   │   - SRDSafeWrapper: wraps SAM2 block MLP and inserts adapter residual safely
+│   │   - VanillaAdapter: minimal residual adapter baseline
+│   │
+│   ├── sfa_adapter.py
+│   │   SFA: Spatial-Frequency Adapter
+│   │   - Injects SRD/Vanilla adapters into SAM2 Image Encoder blocks (MLP adapters)
+│   │   - Provides HR-FPN soil washers + BHFI for decode compat
+│   │   - Provides memory-store sanitizer hook (enhance_memory_store) for ASTA write-back
+│   │   Notes:
+│   │   - In SFA modes, SRD(Image) parameters live under `sam2.*.mlp.adapter.*` and must be trainable.
+│   │
+│   ├── srd_adapter.py
+│   │   SRD implementation (PP-FSRD++/HR-SRD) including Fourier washers.
+│   │
+│   ├── asta_adapter.py
+│   │   ASTA: Adaptive Spatio-Temporal Adapter (enabled in SFA_ASTA/FULL).
+│   │   - Temporal read (memory attention compat + packer)
+│   │   - One-way logit valve fusion: M_base + α·ReLU(Δ_logits)
+│   │   - Router: write scheduling (gate loss) + value head
+│   │   - Write-back: DualMemoryBank update (TBPTT-safe)
+│
+│   ├── pra_adapter.py
+│   │   PRA: Physical-Reflex Adapter (FULL only).
+│   │   - Presence proxy (Pc_prob, p_present)
+│   │   - Reflex suppression / flush/reset signaling (firewall-style)
+│
+│   ├── sam2_compat.py
+│   │   SAM2.1 loader/wrapper utilities (minimal stable API accessors).
+│
+│   └── kmr_adapter.py
+│       Legacy / optional adapter (kept for backward compatibility).
+│       NOTE: current Tri-Adapter paper path does NOT require KMR; orchestrator can keep it disabled.
+│
+└── modules/
+    ├── __init__.py
+    │   Central exports for modular components.
+    │
+    ├── memory_dim_radar.py
+    │   Dimension detection for SAM2 memory / ptr / kv_in dims (robust across SAM2 variants).
+    │   Exports: detect_memory_dims(...)
+    │
+    ├── sam2_decode_compat.py
+    │   Mask decode compat layer:
+    │   - Handles SAM2 mask decoder signature variants
+    │   - Normalizes high-res features
+    │   - Applies HR washer gates + optional BHFI refinement
+    │   Exports: decode_masks_compat(...)
+    │
+    ├── memory_attn_compat.py
+    │   Memory attention compat layer:
+    │   - Signature differences across SAM2 builds
+    │   - KV/token shape normalization
+    │   - Safe fallback to no-memory on error
+    │
+    ├── dual_memory_bank.py
+    │   DualMemoryBank: functional state container + read/write helpers.
+    │   - Keeps per-sample time_days, is_mem_empty, KV tokens, pointers, etc.
+    │   - TBPTT-safe: state-in → state-out, no in-place mutation.
+    │
+    ├── memory_packer.py
+    │   Packs DualMemoryBank → KV tokens / pointers for memory attention.
+    │
+    ├── memory_router.py
+    │   Router/value prediction + gate regularization utilities used by ASTA.
+    │
+    ├── bkmc.py
+    │   BKMC helpers (Δt trust ceiling / temporal hygiene utilities).
+    │
+    ├── ppfsrd_core.py
+    │   PP-FSRD++ Fourier washing unit (amplitude modulation, phase-preserving).
+    │
+    ├── bhfi.py
+    │   BHFI: Boundary-guided High-Frequency Injection (lightweight, gated, near-identity init).
+    │
+    ├── gfu_firewall.py
+    │   Reflex/firewall utilities (used by PRA):
+    │   - Presence suppression utilities
+    │   - Flush/reset logic (energy/fragmentation proxies)
+    │
+    └── memory_bank.py
+        Legacy/simple memory-bank helpers (kept for backward compatibility).
+
+===============================================================================
+5) Utilities
+===============================================================================
+
+RootSAM_Pro/utils/
+├── __init__.py
+├── transforms.py
+│   Resize/pad + reverse-to-physical utilities for masks/logits (no tiling).
+├── optim.py
+│   Optimizer helpers, grad clipping, AMP utilities.
+├── helpers.py
+│   Misc helpers (seeding, timing, logging, IO).
+├── manifest.py
+│   Run manifest writer:
+│   - Args + resolved cfg
+│   - Environment snapshot (CUDA, torch, device)
+│   - Code fingerprint (hash over key source trees)
+│   - Trainable parameter summary (counts per module & key tensors)
+└── version.py
+    Version/tag helpers:
+    - SemVer string + code hash short
+    - Run ID and run label formatting
+
+===============================================================================
+6) Tools (analysis / reporting)
+===============================================================================
+
+RootSAM_Pro/tools/
+├── __init__.py
+├── stratified_report.py
+│   Generates stratified evaluation reports (by Δt bucket, seq length, etc.).
+├── collect_ablation_table.py
+│   Scans runs under RUN_ROOT and merges results into Table 4.1 style CSVs:
+│   - ablation_runs.csv (per-run detail)
+│   - Table_4_1_mean_std.csv (grouped mean±std across seeds)
+│   - Table_4_1_best_seed.csv (best run per subset×ablation)
+├── analyzer.py / inference_viz.py / plot_ppfsrd_curves.py / compute_zsdr.py
+│   Optional utilities for debugging and figures.
+└── patch_trainer_print.py
+    Small helper to patch trainer logging for debugging.
+
+RootSAM_Pro/scripts/
+├── env_cache_autodl.sh
+│   AutoDL cache redirect helper (torch/hf caches → /root/autodl-tmp/.cache).
+├── run_ablation_papaya_2gpu_s0.sh
+│   2-GPU parallel ablation runner (one job per GPU).
+├── run_ablation_catton_2gpu_s0.sh
+│   2-GPU runner for Cotton subset (typo kept for historical reasons).
+└── eval_rollout_stratified_report.py
+    Convenience script for rollout-first stratified evaluation (legacy/compat).
+
+===============================================================================
+7) Run outputs (auto-generated)
+===============================================================================
+
+Runs are stored under:
+  {RUN_ROOT}/{SUBSET}_{ABLATION}_{RUN_ID}[_RUN_TAG]/
+where RUN_ROOT defaults to "runs" and can be overridden by CLI (--run_root) or cfg.
+
+Typical contents:
+├── checkpoints/
+│   ├── *_best.pth / *_best_hpacs.pth / *_best_score.pth   # best checkpoints by policy
+│   └── *_last.pth                                         # last checkpoint
+├── report/
+│   ├── run_manifest.json          # full reproducibility manifest
+│   ├── VERSION.txt                # version + code hash + run id
+│   ├── train_val_history.csv      # epoch-by-epoch train_loss + val metrics
+│   ├── best_events.csv            # every “new best” snapshot
+│   ├── best_summary.csv           # current best single-line summary
+│   ├── test_runs.csv              # every final test snapshot (if enabled)
+│   └── test_summary.csv           # current final test single-line summary
+└── (optional)
+    ├── per_frame_metrics.csv       # per-image metrics (val/test)
+    └── stratified_report.csv       # stratified aggregation (val/test)
+
+===============================================================================
+8) Recommended CLI patterns
+===============================================================================
+
+Ablation (Papaya, single seed):
+  python main.py --subset Papaya_736x552_DPI150 --ablation FULL --run_tag abla_full --set SEED=0
+
+Strict fair-loss ablation (recommended for “monotonic-strength” expectations):
+  python main.py --subset Papaya_736x552_DPI150 --ablation SFA_ONLY --run_tag abla_sfa_only --set SOIL_PENALTY_ALL_MODES=1
+  python main.py --subset Papaya_736x552_DPI150 --ablation SFA_ASTA --run_tag abla_sfa_asta --set SOIL_PENALTY_ALL_MODES=1
+  python main.py --subset Papaya_736x552_DPI150 --ablation FULL     --run_tag abla_full     --set SOIL_PENALTY_ALL_MODES=1
+
+Collect Table 4.1:
+  python -m tools.collect_ablation_table --runs_root runs --subset Papaya_736x552_DPI150 --prefer test

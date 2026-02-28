@@ -1,0 +1,3 @@
+Subset,Ablation_Mode,CKPT_Tag,HPACS_OK,HPACS_Reason,Global_mIoU,Pure_Soil_FPR,Insular_Recall,Gap_mIoU,clDice,SDF_Relaxed_IoU
+Papaya_736x552_DPI150,FULL,BEST_HPACS,1,,69.43,1.05,80.14,0.00,77.18,73.72
+Cotton_736x552_DPI150,FULL,BEST_HPACS,1,,42.94,0.02,70.38,0.00,85.26,84.58
